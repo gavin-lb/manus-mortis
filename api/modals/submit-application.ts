@@ -1,4 +1,4 @@
-import { JSONValue } from "@gadget-client/manus-mortis-v2";
+import { JSONValue } from "@gadget-client/manus-mortis";
 import {
   APIModalSubmitInteraction,
   ContainerBuilder,

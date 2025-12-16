@@ -1,7 +1,7 @@
 {
-  "name": "manus-mortis-v2",
+  "name": "manus-mortis",
   "version": "0.1.0",
-  "description": "Internal package for Gadget app manus-mortis-v2 (Development environment)",
+  "description": "Internal package for Gadget app manus-mortis (Development environment)",
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
@@ -12,7 +12,7 @@
     "@dnd-kit/modifiers": "^9.0.0",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
-    "@gadget-client/manus-mortis-v2": "link:.gadget/client",
+    "@gadget-client/manus-mortis": "link:.gadget/client",
     "@gadgetinc/react": "^0.23.3",
     "@radix-ui/react-dropdown-menu": "^2.1.6",
     "@radix-ui/react-popover": "^1.1.15",

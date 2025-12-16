@@ -1,4 +1,4 @@
-import { TicketsRecord } from "@gadget-client/manus-mortis-v2";
+import { TicketsRecord } from "@gadget-client/manus-mortis";
 import {
   ActionRowBuilder,
   ButtonBuilder,

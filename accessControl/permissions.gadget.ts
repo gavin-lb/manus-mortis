@@ -12,36 +12,25 @@ export const permissions: GadgetPermissions = {
     "signed-in": {
       storageKey: "signed-in",
       models: {
-        guild: {
-          read: true,
+        session: {
           actions: {
-            update: true,
+            signIn: true,
           },
         },
-        user: {
-          read: true,
-          actions: {
-            signOut: {
-              filter: "accessControl/filters/user/tenant.gelly",
-            },
-            update: {
-              filter: "accessControl/filters/user/tenant.gelly",
-            },
-          },
-        },
+      },
+      actions: {
+        getChannels: true,
+        getMembers: true,
+        getRoles: true,
+        getUsers: true,
       },
     },
     unauthenticated: {
       storageKey: "unauthenticated",
       models: {
-        user: {
-          read: {
-            filter: "accessControl/filters/user/tenant2.gelly",
-          },
+        session: {
           actions: {
-            update: {
-              filter: "accessControl/filters/user/tenant2.gelly",
-            },
+            signIn: true,
           },
         },
       },
@@ -49,11 +38,9 @@ export const permissions: GadgetPermissions = {
     manager: {
       storageKey: "5cW8--Iakkct",
       models: {
-        user: {
-          read: true,
+        session: {
           actions: {
-            delete: true,
-            update: true,
+            signIn: true,
           },
         },
       },

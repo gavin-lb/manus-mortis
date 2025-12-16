@@ -1,7 +1,7 @@
 import {
   ApplicationRecord as GadgetApplicationRecord,
   GadgetRecord,
-} from "@gadget-client/manus-mortis-v2";
+} from "@gadget-client/manus-mortis";
 import { APIModalInteractionResponseCallbackData, APISelectMenuOption } from "discord.js";
 
 export interface StringSelectOption extends APISelectMenuOption {

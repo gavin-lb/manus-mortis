@@ -1,5 +1,5 @@
 import { api } from "@/api";
-import { PointRecord } from "@gadget-client/manus-mortis-v2";
+import { PointRecord } from "@gadget-client/manus-mortis";
 import { useFindBy } from "@gadgetinc/react";
 import { AutoForm, AutoNumberInput, AutoSubmit, AutoTable } from "@gadgetinc/react/auto/polaris";
 import { LoaderFunction } from "@remix-run/node";

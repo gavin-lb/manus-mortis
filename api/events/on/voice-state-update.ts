@@ -1,4 +1,4 @@
-import { PointRecord } from "@gadget-client/manus-mortis-v2";
+import { PointRecord } from "@gadget-client/manus-mortis";
 import { Events, type ClientEvents } from "discord.js";
 import { api, logger } from "gadget-server";
 

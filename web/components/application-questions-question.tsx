@@ -3,10 +3,7 @@ import { MinMaxSlider, MinMaxSliderProps } from "@/components/min-max-slider";
 import { RoleMultiselector } from "@/components/role-multiselector";
 import { SortableItemHandle } from "@/components/ui/sortable";
 import { FormSubmitResult, FormValidate } from "@/routes/_user.tickets-applications";
-import {
-  QuestionRecord as GadgetQuestionRecord,
-  GadgetRecord,
-} from "@gadget-client/manus-mortis-v2";
+import { QuestionRecord as GadgetQuestionRecord, GadgetRecord } from "@gadget-client/manus-mortis";
 import {
   AutoBooleanInput,
   AutoHiddenInput,
@@ -75,8 +72,10 @@ export interface StringSelectOption extends APISelectMenuOption {
   roles: string[];
 }
 
-export interface QuestionRecord
-  extends Omit<GadgetRecord<GadgetQuestionRecord>, "stringSelectOptions"> {
+export interface QuestionRecord extends Omit<
+  GadgetRecord<GadgetQuestionRecord>,
+  "stringSelectOptions"
+> {
   stringSelectOptions: StringSelectOption[] | null;
 }
 

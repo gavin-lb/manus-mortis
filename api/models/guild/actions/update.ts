@@ -1,4 +1,4 @@
-import { GuildRecord as GadgetGuildRecord } from "@gadget-client/manus-mortis-v2";
+import { GuildRecord as GadgetGuildRecord } from "@gadget-client/manus-mortis";
 import { RESTPostAPIChannelMessageJSONBody } from "discord.js";
 import { ActionOptions, applyParams, logger, save } from "gadget-server";
 import { preventCrossUserDataAccess } from "gadget-server/auth";

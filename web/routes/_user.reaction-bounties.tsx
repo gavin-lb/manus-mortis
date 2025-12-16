@@ -1,6 +1,6 @@
 import { api } from "@/api";
 import { FormSelector } from "@/components/form-selector";
-import { BountyRecord } from "@gadget-client/manus-mortis-v2";
+import { BountyRecord } from "@gadget-client/manus-mortis";
 import { useFindBy } from "@gadgetinc/react";
 import {
   AutoForm,

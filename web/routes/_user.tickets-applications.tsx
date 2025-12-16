@@ -3,7 +3,7 @@ import { ApplicationForm, ApplicationFormRef } from "@/components/application-fo
 import { ApplicationQuestions, QuestionsRef } from "@/components/application-questions";
 import { QuestionType, StringSelectOption } from "@/components/application-questions-question";
 import { FormSelector } from "@/components/form-selector";
-import { ApplicationRecord, QuestionRecord } from "@gadget-client/manus-mortis-v2";
+import { ApplicationRecord, QuestionRecord } from "@gadget-client/manus-mortis";
 import { useAction, useFindBy } from "@gadgetinc/react";
 import { AutoForm, AutoHiddenInput, AutoSubmit, AutoTable } from "@gadgetinc/react/auto/polaris";
 import { LoaderFunction } from "@remix-run/node";

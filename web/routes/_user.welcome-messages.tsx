@@ -1,6 +1,6 @@
 import { api } from "@/api";
 import { FormSelector } from "@/components/form-selector";
-import { WelcomeMessageRecord } from "@gadget-client/manus-mortis-v2";
+import { WelcomeMessageRecord } from "@gadget-client/manus-mortis";
 import { useAction } from "@gadgetinc/react";
 import {
   AutoEnumInput,

@@ -1,6 +1,6 @@
 import type { GadgetModel } from "gadget-server";
 
-// This file describes the schema for the "guild" model, go to https://manus-mortis-v2.gadget.app/edit to view/edit your model in Gadget
+// This file describes the schema for the "guild" model, go to https://manus-mortis.gadget.app/edit to view/edit your model in Gadget
 // For more information on how to update this file http://docs.gadget.dev
 
 export const schema: GadgetModel = {
@@ -45,9 +45,7 @@ export const schema: GadgetModel = {
       type: "json",
       validations: {
         required: true,
-        run: [
-          "api/models/guild/validations/validate-post-channel.ts",
-        ],
+        run: ["api/models/guild/validations/validate-post-channel.ts"],
       },
       storageKey: "-L08_Ox4T1Lp",
     },

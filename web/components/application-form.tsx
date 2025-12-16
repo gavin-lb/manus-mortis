@@ -2,7 +2,7 @@ import { Emoji, EmojiPicker } from "@/components/emoji-picker";
 import { FormSelector } from "@/components/form-selector";
 import { RoleMultiselector } from "@/components/role-multiselector";
 import { FormSubmit, FormValidate } from "@/routes/_user.tickets-applications";
-import { ApplicationRecord } from "@gadget-client/manus-mortis-v2";
+import { ApplicationRecord } from "@gadget-client/manus-mortis";
 import { useFormContext } from "@gadgetinc/react";
 import {
   AutoHiddenInput,

@@ -1,4 +1,4 @@
-import { GadgetRecord } from "@gadget-client/manus-mortis-v2";
+import { GadgetRecord } from "@gadget-client/manus-mortis";
 import { AutoHiddenInput } from "@gadgetinc/react/auto/polaris";
 import { useLoaderData } from "@remix-run/react";
 import { Combobox, Icon, Listbox, Tag, TextFieldProps } from "@shopify/polaris";
