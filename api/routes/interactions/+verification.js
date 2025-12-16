@@ -16,6 +16,8 @@ export default async function (server) {
     
     const isValidRequest = verifyKey(body, signature, timestamp, process.env.PUBLIC_KEY)
 
+    logger.debug({ isValidRequest, body, signature, timestamp }, "Interactions endpoint verification prehandler")
+    
     if (!isValidRequest) {
       logger.error({ data: { body, signature, timestamp } }, 'Bad request signature!')
       return reply.status(401).send('Bad request signature')

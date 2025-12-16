@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "checkJs": true,
+    "noImplicitAny": true,
+    "noEmit": true,
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "forceConsistentCasingInFileNames": true,
+    "target": "es2020",
+    "lib": [
+      "es2020",
+      "DOM",
+      "ESNext"
+    ],
+    "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["web/*"],
+      "/gadget/app/*": ["*"]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    ".gadget"
+  ]
+}

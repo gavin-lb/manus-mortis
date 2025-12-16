@@ -1,7 +1,9 @@
 import { api, logger } from 'gadget-server'
 
+const API_URL = 'https://discord.com/api/v10/' 
+
 /**
- * Makes a request to the Discord API by queuing it as a Gadget action.
+ * Makes a request to the Discord API.
  *
  * @param {String} endpoint - The API endpoint to which the request is sent.
  * @param {Object} options - An object containing options for the request.
@@ -10,19 +12,36 @@ import { api, logger } from 'gadget-server'
  * @return {Object} - An object corresponding to the JSON response to the request.
  */
 export async function discordRequest(endpoint, options) {
-  const task = await api.enqueue(
-    api.discordRequest,
-    { endpoint, method: options.method, body: JSON.stringify(options.body) }, 
-    { retries: { retryCount: 16 } }
+
+  const res = await fetch(
+    API_URL + endpoint, {
+      headers: {
+        Authorization: `Bot ${process.env.DISCORD_TOKEN}`,
+        'Content-Type': 'application/json; charset=UTF-8',
+        'User-Agent': 'Manus Mortis Bot',
+      },
+      method: options.method,
+      body: JSON.stringify(options.body)
+    }
   )
 
-  // A somewhat hacky fix to a gadget bug. Sometimes calling .result will 
-  // randomly throw an error the first time, so we need to call it again. 
-  try {
-    return await task.result()
-  } catch {
-    return await task.result()
+  if (res.status == 429) {
+    logger.warn({ res }, 'Rate limited')
+    throw new Error('Rate limited')
   }
+  
+  try {
+    const data = await res.json()
+    if (!res.ok) {
+      throw new Error(JSON.stringify(data))
+    }
+    return data
+  } catch (err) {
+    if (!err instanceof SyntaxError) {
+      logger.error({ err }, 'discordRequest error')
+    }
+    return {}
+  } 
 }
 
 export async function createPrivateThread(channel_id, name) {

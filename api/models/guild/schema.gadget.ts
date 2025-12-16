@@ -1,31 +1,86 @@
 import type { GadgetModel } from "gadget-server";
 
-// This file describes the schema for the "guild" model, go to https://manus-mortis.gadget.app/edit to view/edit your model in Gadget
+// This file describes the schema for the "guild" model, go to https://manus-mortis-v2.gadget.app/edit to view/edit your model in Gadget
 // For more information on how to update this file http://docs.gadget.dev
 
 export const schema: GadgetModel = {
-  type: "gadget/model-schema/v1",
-  storageKey: "eYJCD1p3wt2x",
+  type: "gadget/model-schema/v2",
+  storageKey: "DTtcTkOJd0-K",
   fields: {
-    afk_voice_channels: { type: "json", storageKey: "WYHSMwT6usJf" },
-    bounty_channel: { type: "string", storageKey: "-zJBH3yywG5l" },
-    guild_id: { type: "string", storageKey: "HiEnQuE5tPZc" },
-    jobs_channel: { type: "string", storageKey: "1EB_aQ4gw6Vo" },
-    owner_id: { type: "string", storageKey: "Bj2sd_yArvYb" },
-    role_ids: { type: "json", storageKey: "EBwCijHZzFTc" },
-    threads: {
+    applications: {
       type: "hasMany",
-      children: {
-        model: "application/thread",
-        belongsToField: "guild",
-      },
-      storageKey: "Ko3dbT1vPhB_",
+      children: { model: "application", belongsToField: "guild" },
+      storageKey: "Vin8mBY9nSC4",
     },
-    ticket_channel: { type: "string", storageKey: "JIzk5KGFkwNG" },
-    tickets: {
+    bountyChannel: { type: "json", storageKey: "q7taKIWUU37a" },
+    bountyHours: {
+      type: "number",
+      default: 24,
+      decimals: 0,
+      storageKey: "lT2OjXiPEj-U",
+    },
+    bountyHunter: { type: "json", storageKey: "CZ460jb-B8ku" },
+    bountyMessage: {
+      type: "string",
+      default: "",
+      validations: { required: true },
+      storageKey: "Bjx3DRngWObo",
+    },
+    bountyPostMessageId: {
+      type: "string",
+      storageKey: "Go3vgI2kZXw5",
+    },
+    bountyPoster: { type: "json", storageKey: "SgnLpJ3-UP0h" },
+    messagePoints: {
+      type: "number",
+      decimals: 0,
+      storageKey: "liw4tIMIWa5x",
+    },
+    points: {
       type: "hasMany",
-      children: { model: "ticket", belongsToField: "guild" },
-      storageKey: "YnTwtqy9bl6g",
+      children: { model: "point", belongsToField: "guild" },
+      storageKey: "9TFI1Kykoq0N",
+    },
+    postChannel: {
+      type: "json",
+      validations: {
+        required: true,
+        run: [
+          "api/models/guild/validations/validate-post-channel.ts",
+        ],
+      },
+      storageKey: "-L08_Ox4T1Lp",
+    },
+    postMessageId: { type: "string", storageKey: "-zgLlo1MYapW" },
+    reactPoints: {
+      type: "number",
+      decimals: 0,
+      storageKey: "ovNYSUb6tlQh",
+    },
+    referralPoints: {
+      type: "number",
+      decimals: 0,
+      storageKey: "uRO051sp0VIu",
+    },
+    serverId: {
+      type: "string",
+      validations: { required: true, unique: true },
+      storageKey: "mA2lrFxr1iUT",
+    },
+    ticketsChannel: {
+      type: "json",
+      validations: { required: true },
+      storageKey: "CLmy8sdQNK6x",
+    },
+    ticketsHandler: {
+      type: "json",
+      validations: { required: true },
+      storageKey: "r542tKimMDD5",
+    },
+    voicePoints: {
+      type: "number",
+      decimals: 0,
+      storageKey: "RAj_B2o23GF0",
     },
   },
 };
