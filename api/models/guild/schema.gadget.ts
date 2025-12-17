@@ -15,17 +15,11 @@ export const schema: GadgetModel = {
     bountyChannel: { type: "json", storageKey: "q7taKIWUU37a" },
     bountyHours: {
       type: "number",
-      default: 24,
       decimals: 0,
       storageKey: "lT2OjXiPEj-U",
     },
     bountyHunter: { type: "json", storageKey: "CZ460jb-B8ku" },
-    bountyMessage: {
-      type: "string",
-      default: "",
-      validations: { required: true },
-      storageKey: "Bjx3DRngWObo",
-    },
+    bountyMessage: { type: "string", storageKey: "Bjx3DRngWObo" },
     bountyPostMessageId: {
       type: "string",
       storageKey: "Go3vgI2kZXw5",
@@ -36,19 +30,7 @@ export const schema: GadgetModel = {
       decimals: 0,
       storageKey: "liw4tIMIWa5x",
     },
-    points: {
-      type: "hasMany",
-      children: { model: "point", belongsToField: "guild" },
-      storageKey: "9TFI1Kykoq0N",
-    },
-    postChannel: {
-      type: "json",
-      validations: {
-        required: true,
-        run: ["api/models/guild/validations/validate-post-channel.ts"],
-      },
-      storageKey: "-L08_Ox4T1Lp",
-    },
+    postChannel: { type: "json", storageKey: "-L08_Ox4T1Lp" },
     postMessageId: { type: "string", storageKey: "-zgLlo1MYapW" },
     reactPoints: {
       type: "number",
@@ -65,16 +47,8 @@ export const schema: GadgetModel = {
       validations: { required: true, unique: true },
       storageKey: "mA2lrFxr1iUT",
     },
-    ticketsChannel: {
-      type: "json",
-      validations: { required: true },
-      storageKey: "CLmy8sdQNK6x",
-    },
-    ticketsHandler: {
-      type: "json",
-      validations: { required: true },
-      storageKey: "r542tKimMDD5",
-    },
+    ticketsChannel: { type: "json", storageKey: "CLmy8sdQNK6x" },
+    ticketsHandler: { type: "json", storageKey: "r542tKimMDD5" },
     voicePoints: {
       type: "number",
       decimals: 0,

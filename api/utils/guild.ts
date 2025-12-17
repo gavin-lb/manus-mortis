@@ -46,29 +46,36 @@ const buildApplicationPostComponents = memoize(
       )
       .addActionRowComponents(
         new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
-          new StringSelectMenuBuilder()
-            .setCustomId("openApplication")
-            .setPlaceholder("Open an application")
-            .setRequired(false)
-            .setMinValues(0)
-            .addOptions(
-              ...records.map((record) => {
-                const option = new StringSelectMenuOptionBuilder()
-                  .setLabel(record.title)
-                  .setValue(record.id);
-                const emoji = record.emoji as Emoji | null;
+          records && records.length > 0
+            ? new StringSelectMenuBuilder()
+                .setCustomId("openApplication")
+                .setPlaceholder("Open an application")
+                .setRequired(false)
+                .setMinValues(0)
+                .addOptions(
+                  ...records.map((record) => {
+                    const option = new StringSelectMenuOptionBuilder()
+                      .setLabel(record.title)
+                      .setValue(record.id);
+                    const emoji = record.emoji as Emoji | null;
 
-                if (record.description) {
-                  option.setDescription(record.description);
-                }
+                    if (record.description) {
+                      option.setDescription(record.description);
+                    }
 
-                if (emoji) {
-                  option.setEmoji(emoji.name);
-                }
+                    if (emoji) {
+                      option.setEmoji(emoji.name);
+                    }
 
-                return option;
-              }),
-            ),
+                    return option;
+                  }),
+                )
+            : new StringSelectMenuBuilder()
+                .setCustomId("openApplication")
+                .setRequired(false)
+                .setDisabled(true)
+                .setPlaceholder("No applications available")
+                .addOptions(new StringSelectMenuOptionBuilder().setLabel("N/A").setValue("none")),
         ),
       )
       .addSeparatorComponents(
@@ -106,6 +113,7 @@ export const getApplicationPost = async () => {
       (
         await api.application.findMany({
           select: { id: true, title: true, description: true, emoji: true },
+          sort: { title: "Ascending" },
         })
       ).toJSON(),
     ),

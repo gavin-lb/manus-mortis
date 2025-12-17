@@ -27,14 +27,16 @@ import {
   Text,
 } from "@shopify/polaris";
 import { SaveIcon } from "@shopify/polaris-icons";
-import { APIGuildChannel, APIRole } from "discord.js";
+import { APIGuildChannel, APIRole, ChannelType } from "discord.js";
 import Markdown from "react-markdown";
 
 export const loader = (async ({ context }) => {
   return {
     serverId: process.env.SERVER_ID!,
     roles: (await context.api.getRoles()) as APIRole[],
-    channels: (await context.api.getChannels()) as APIGuildChannel[],
+    channels: ((await context.api.getChannels()) as APIGuildChannel[]).filter((channel) =>
+      [ChannelType.GuildText, ChannelType.GuildAnnouncement].includes(channel.type),
+    ),
   };
 }) satisfies LoaderFunction;
 

@@ -16,7 +16,7 @@ export const schema: GadgetModel = {
     },
     description: {
       type: "string",
-      validations: { stringLength: { min: 1, max: 100 } },
+      validations: { stringLength: { min: 0, max: 100 } },
       storageKey: "-MsZR-OkwV6N",
     },
     index: {
@@ -64,7 +64,7 @@ export const schema: GadgetModel = {
     },
     placeholder: {
       type: "string",
-      validations: { stringLength: { min: 1, max: 100 } },
+      validations: { stringLength: { min: 0, max: 100 } },
       storageKey: "pSe6GG_6ur7_",
     },
     stringSelectOptions: { type: "json", storageKey: "Tw_tURFyxXGW" },

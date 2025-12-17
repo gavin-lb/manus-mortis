@@ -24,7 +24,7 @@ export default async (interaction: APIModalSubmitInteraction) => {
   const ticket = await api.tickets.create({
     title,
     body,
-    ownerName: user.global_name,
+    ownerName: user.global_name ?? user.username,
     ownerAvatar: getAvatarURL(user),
     ownerId: user.id,
   });

@@ -1,17 +1,17 @@
 import * as React from "react";
 
-type PossibleRef<T> = React.Ref<T> | undefined;
+type PossibleRef<T> = React.RefCallback<T> | React.MutableRefObject<T | null> | null | undefined;
 
 /**
  * Set a given ref to a given value
  * This utility takes care of different types of refs: callback refs and RefObject(s)
  */
-function setRef<T>(ref: PossibleRef<T>, value: T) {
+function setRef<T>(ref: PossibleRef<T>, value: T | null): void | (() => void) {
   if (typeof ref === "function") {
     return ref(value);
   }
 
-  if (ref !== null && ref !== undefined) {
+  if (ref && "current" in ref) {
     ref.current = value;
   }
 }

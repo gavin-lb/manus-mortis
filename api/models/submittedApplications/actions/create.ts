@@ -43,88 +43,94 @@ export const run: ActionRun = async ({ params, record, logger, api, connections 
     emojiName = (applicationRecord.emoji as { id: string; name: string }).name;
   }
 
-  const roles = (applicationRecord.roles as { name: string; id: string }[]).map(({ id }) => id);
+  const roles = ((applicationRecord.roles ?? []) as { name: string; id: string }[]).map(
+    (role: { name: string; id: string }) => role.id,
+  );
   const data = record.data as any as APIModalSubmission;
   const components = data.components as ModalSubmitLabelComponent[];
 
-  const answers = components.map(({ component }, index) => {
-    const answer = component as ModalSubmitComponent;
-    const question = questionMap[component.custom_id];
-    const container = new ContainerBuilder()
-      .setAccentColor(MM_COLOUR)
-      .addTextDisplayComponents(
-        new TextDisplayBuilder().setContent(`### Q${index + 1}. ${question.title}`),
-      )
-      .addSeparatorComponents(
-        new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
-      );
-
-    switch (answer.type) {
-      case ComponentType.TextInput:
-        container.addTextDisplayComponents(
-          new TextDisplayBuilder().setContent(
-            answer.value && answer.value.length > 0 ? answer.value : NO_RESPONSE,
-          ),
+  const answers = await Promise.all(
+    components.map(async ({ component }, index) => {
+      const answer = component as ModalSubmitComponent;
+      const question = questionMap[component.custom_id];
+      const container = new ContainerBuilder()
+        .setAccentColor(MM_COLOUR)
+        .addTextDisplayComponents(
+          new TextDisplayBuilder().setContent(`### Q${index + 1}. ${question.title}`),
+        )
+        .addSeparatorComponents(
+          new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
         );
-        break;
 
-      case ComponentType.StringSelect:
-        const options = question.stringSelectOptions as any as StringSelectOption[];
-        container.addTextDisplayComponents(
-          new TextDisplayBuilder().setContent(
-            answer.values
-              .map((answer) => {
-                const option = options[Number(answer)];
-                roles.push(...option.roles);
-                return ` - ${option.label}`;
-              })
-              .join("\n"),
-          ),
-        );
-        break;
-
-      case ComponentType.FileUpload:
-        if (answer.values.length > 0) {
-          const attachments = answer.values.map(
-            (snowflake) => data.resolved!.attachments![snowflake],
-          );
-
-          container.addMediaGalleryComponents(
-            new MediaGalleryBuilder().addItems(
-              ...attachments.map((attachment) =>
-                new MediaGalleryItemBuilder().setURL(attachment.url),
-              ),
+      switch (answer.type) {
+        case ComponentType.TextInput:
+          container.addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(
+              answer.value && answer.value.length > 0 ? answer.value : NO_RESPONSE,
             ),
           );
-        } else {
-          container.addTextDisplayComponents(new TextDisplayBuilder().setContent(NO_RESPONSE));
-        }
-        break;
+          break;
 
-      case ComponentType.UserSelect:
-        container.addTextDisplayComponents(
-          new TextDisplayBuilder().setContent(
-            answer.values
-              .map(async (id) => {
-                if (id === record.ownerId) return "Nice try, but you cannot refer yourself";
+        case ComponentType.StringSelect:
+          const options = question.stringSelectOptions as any as StringSelectOption[];
+          container.addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(
+              answer.values
+                .map((answer) => {
+                  const option = options[Number(answer)];
+                  roles.push(...option.roles);
+                  return ` - ${option.label}`;
+                })
+                .join("\n"),
+            ),
+          );
+          break;
 
-                const pointRecord = await api.internal.point.upsert({
-                  userId: id,
-                  _atomics: {
-                    referralCount: { increment: 1 },
-                  },
-                  on: ["userId"],
-                });
-                api.point.computePoints(pointRecord.id);
-                return `<@${id}>`;
-              })
-              .join(", "),
-          ),
-        );
-    }
+        case ComponentType.FileUpload:
+          if (answer.values.length > 0) {
+            const attachments = answer.values.map(
+              (snowflake) => data.resolved!.attachments![snowflake],
+            );
 
-    return container.toJSON();
-  });
+            container.addMediaGalleryComponents(
+              new MediaGalleryBuilder().addItems(
+                ...attachments.map((attachment) =>
+                  new MediaGalleryItemBuilder().setURL(attachment.url),
+                ),
+              ),
+            );
+          } else {
+            container.addTextDisplayComponents(new TextDisplayBuilder().setContent(NO_RESPONSE));
+          }
+          break;
+
+        case ComponentType.UserSelect:
+          container.addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(
+              answer.values.length > 0
+                ? answer.values
+                    .map(async (id) => {
+                      if (id === record.ownerId) return "Nice try, but you cannot refer yourself";
+
+                      const pointRecord = await api.internal.point.upsert({
+                        userId: id,
+                        _atomics: {
+                          referralCount: { increment: 1 },
+                        },
+                        on: ["userId"],
+                      });
+                      api.point.computePoints(pointRecord.id);
+                      return `<@${id}>`;
+                    })
+                    .join(", ")
+                : NO_RESPONSE,
+            ),
+          );
+      }
+
+      return container.toJSON();
+    }),
+  );
 
   const thread = await createThread(channelId, {
     name: `${emojiName ?? "✉️"}[@${record.ownerName}] ${applicationRecord.title}`,

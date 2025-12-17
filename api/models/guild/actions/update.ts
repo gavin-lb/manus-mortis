@@ -21,21 +21,21 @@ type GuildRecord = GadgetGuildRecord & {
 };
 
 const updateChannel = async (
-  oldChannel: Channel | null,
-  newChannel: Channel | undefined,
+  oldChannelId: string | undefined,
+  newChannelId: string | undefined,
   existingPostMessageId: string | null,
   postMessage: RESTPostAPIChannelMessageJSONBody,
   setMessageId: (id: string) => void,
 ) => {
-  if (!newChannel || newChannel === oldChannel) return;
+  if (!newChannelId || newChannelId === oldChannelId) return;
 
-  if (existingPostMessageId && oldChannel) {
-    deleteMessage(oldChannel.id, existingPostMessageId);
-    logger.debug({ existingPostMessageId, oldChannel }, "Deleting old post message");
+  if (existingPostMessageId && oldChannelId) {
+    deleteMessage(oldChannelId, existingPostMessageId);
+    logger.debug({ existingPostMessageId, oldChannelId }, "Deleting old post message");
   }
 
-  const message = await sendMessage(newChannel.id, postMessage);
-  logger.debug({ message, newChannel }, "Posted new message");
+  const message = await sendMessage(newChannelId, postMessage);
+  logger.debug({ message, newChannelId }, "Posted new message");
 
   setMessageId(message.id);
 };
@@ -47,20 +47,22 @@ export const run: ActionRun = async ({ params, record }) => {
   const guildParams = params.guild as Partial<GuildRecord>;
 
   await updateChannel(
-    guildRecord.postChannel,
-    guildParams.postChannel,
+    guildRecord.postChannel?.id,
+    guildParams.postChannel?.id,
     record.postMessageId,
     await getApplicationPost(),
     (id) => (guildRecord.postMessageId = id),
   );
 
-  await updateChannel(
-    guildRecord.bountyChannel,
-    guildParams.bountyChannel,
-    record.bountyPostMessageId,
-    getBountyPost(guildRecord.bountyMessage),
-    (id) => (guildRecord.bountyPostMessageId = id),
-  );
+  if (guildRecord.bountyMessage) {
+    await updateChannel(
+      guildRecord.bountyChannel?.id,
+      guildParams.bountyChannel?.id,
+      record.bountyPostMessageId,
+      getBountyPost(guildRecord.bountyMessage),
+      (id) => (guildRecord.bountyPostMessageId = id),
+    );
+  }
 
   if (
     guildRecord.bountyPostMessageId &&

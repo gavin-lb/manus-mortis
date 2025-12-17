@@ -237,7 +237,7 @@ export default function () {
             </BlockStack>
           }
         >
-          <Tag key={"questionTag" + id + question.index}>Q.{question.index + 1}</Tag>
+          <Tag key={"questionTag" + id + question.index}>Q{question.index + 1}</Tag>
         </Tooltip>
       ));
   };
@@ -377,6 +377,7 @@ export default function () {
                       },
                     },
                   }}
+                  initialSort={{ title: "Ascending" }}
                 />
 
                 <InlineStack align="end">

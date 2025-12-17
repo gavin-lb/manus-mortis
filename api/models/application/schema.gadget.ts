@@ -60,8 +60,6 @@ export const schema: GadgetModel = {
         stringLength: { min: 1, max: 45 },
       },
       storageKey: "7Bx9UYELK3Hu",
-      filterIndex: false,
-      searchIndex: false,
     },
   },
 };

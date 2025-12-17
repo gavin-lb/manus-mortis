@@ -37,7 +37,7 @@ import {
 import { APIRole, APISelectMenuOption } from "discord.js";
 import { motion } from "framer-motion";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { FieldError, useFormContext } from "react-hook-form";
+import { FieldError, useFormContext, useWatch } from "react-hook-form";
 
 export interface ExistingQuestion extends QuestionRecord {
   isNew: false;
@@ -72,10 +72,8 @@ export interface StringSelectOption extends APISelectMenuOption {
   roles: string[];
 }
 
-export interface QuestionRecord extends Omit<
-  GadgetRecord<GadgetQuestionRecord>,
-  "stringSelectOptions"
-> {
+export interface QuestionRecord
+  extends Omit<GadgetRecord<GadgetQuestionRecord>, "stringSelectOptions"> {
   stringSelectOptions: StringSelectOption[] | null;
 }
 
@@ -155,13 +153,54 @@ function AutoMinMax({
   );
 }
 
+export function UserReferral({ question }: { question: Question }) {
+  const { setValue, watch } = useFormContext();
+
+  const defaultTitle = "Were you referred to us by someone?" as const;
+  const defaultDescription =
+    "(Optional) If so, select them from the list. If not, you can leave it blank." as const;
+
+  // On mount React calls
+  //   entry  >  exit  >  entry
+  // so we use a flag to ensure exit only runs on unmount
+  let isEntry = true;
+  useEffect(() => {
+    // On entry
+    const { title, description, isRequired } =
+      question.type === QuestionType.UserSelect
+        ? question
+        : { title: defaultTitle, description: defaultDescription, isRequired: false };
+
+    setValue("question.title", title, { shouldDirty: true });
+    setValue("question.description", description, { shouldDirty: true });
+    setValue("question.isRequired", isRequired, { shouldDirty: true });
+
+    // On exit
+    return () => {
+      const { question: values } = watch();
+      if (!isEntry && values.type !== QuestionType.UserSelect) {
+        const { title, description, isRequired } =
+          question.type === QuestionType.UserSelect
+            ? { title: "", description: "", isRequired: true }
+            : question;
+        console.log("Setting:", title, description, isRequired);
+        setValue("question.title", title);
+        setValue("question.description", description);
+        setValue("question.isRequired", isRequired);
+      }
+      isEntry = false;
+    };
+  }, []);
+
+  return <></>;
+}
+
 export function TextInputQuestion({ question }: TextInputQuestionProps) {
   const { watch, setValue, getFieldState, clearErrors } = useFormContext();
   const { question: values } = watch();
 
   return (
     <Box paddingBlock="200">
-      <AutoHiddenInput field="textInputStyle" value={question.textInputStyle} />
       <BlockStack gap="150">
         <FormLayout.Group>
           <Select
@@ -378,9 +417,8 @@ export function StringSelectQuestion({
   );
 }
 
-export function FileUploadQuestion({ question }: FileUploadQuestionProps) {
-  const { setValue, watch } = useFormContext();
-  const { question: values } = watch();
+export function FileUploadQuestion() {
+  const { question: values } = useWatch();
 
   return (
     <Box paddingBlockStart="150">
@@ -510,7 +548,6 @@ export const ApplicationQuestionsQuestion = forwardRef<QuestionRef, QuestionProp
           </div>
           <Box paddingBlockStart="200">
             <Collapsible open={isActive} id={"question" + question.index} transition={TRANSITION}>
-              <AutoHiddenInput field="type" value={question.type} />
               <FormLayout>
                 <AutoStringInput
                   field="description"
@@ -573,7 +610,6 @@ export const ApplicationQuestionsQuestion = forwardRef<QuestionRef, QuestionProp
                     })
                   }
                 />
-                <AutoHiddenInput field="stringSelectOptions" value={question.stringSelectOptions} />
               </Collapsible>
 
               <Collapsible
@@ -589,7 +625,7 @@ export const ApplicationQuestionsQuestion = forwardRef<QuestionRef, QuestionProp
                 id={"fileUpload" + question.index}
                 transition={TRANSITION}
               >
-                <FileUploadQuestion question={question} />
+                <FileUploadQuestion />
               </Collapsible>
 
               <Box paddingBlockStart="200">
@@ -601,8 +637,13 @@ export const ApplicationQuestionsQuestion = forwardRef<QuestionRef, QuestionProp
               </Box>
             </Collapsible>
           </Box>
+
+          {values?.type === QuestionType.UserSelect && <UserReferral question={question} />}
           <AutoHiddenInput field="min" value={question.min} />
           <AutoHiddenInput field="max" value={question.max} />
+          <AutoHiddenInput field="type" value={question.type} />
+          <AutoHiddenInput field="textInputStyle" value={question.textInputStyle} />
+          <AutoHiddenInput field="stringSelectOptions" value={question.stringSelectOptions} />
         </Card>
       </motion.div>
     );

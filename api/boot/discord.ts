@@ -11,7 +11,7 @@ import { eventHandlers, type EventHandlers } from "/gadget/app/api/events";
  */
 export default async function (server: Server) {
   if (process.env.NODE_ENV == "development") {
-    //return;
+    return;
   }
 
   const discordClient: Client & { uuid?: string } = new Client({

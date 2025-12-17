@@ -10,11 +10,11 @@ import { api } from "gadget-server";
 import { MM_COLOUR, MM_EMOJI } from "../utils";
 
 export default async (interaction: APIModalSubmitInteraction, applicationId: string) => {
-  const { global_name: ownerName, id: ownerId } = interaction.member?.user!;
+  const user = interaction.member?.user!;
 
   const submittedApplication = await api.submittedApplications.create({
-    ownerName,
-    ownerId,
+    ownerName: user.global_name ?? user.username,
+    ownerId: user.id,
     application: { _link: applicationId },
     data: interaction.data as any as JSONValue,
   });
