@@ -113,8 +113,22 @@ export default function () {
                       helpText="The number of hours a bounty will stay active for after being posted"
                       suffix="hours"
                     />
+                    <FormSelector
+                      field="bountyReminderChannel"
+                      model="guild"
+                      loaderData="channels"
+                      label="Reminder Channel"
+                      helpText="The channel where a reminder to post a new bounty will be sent"
+                      record={guildRecord}
+                    />
+                    <AutoNumberInput
+                      field="bountyReminderHours"
+                      helpText="The number of hours after a bounty is posted until a reminder is sent"
+                      suffix="hours"
+                    />
                     <AutoStringInput
                       field="bountyMessage"
+                      label="Bounty explanation message"
                       helpText="The message displayed on the main post to explain bounties"
                       multiline
                     />

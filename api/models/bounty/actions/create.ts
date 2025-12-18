@@ -1,7 +1,9 @@
 import { EmbedBuilder } from "discord.js";
 import { ActionOptions, applyParams, save } from "gadget-server";
 import { preventCrossUserDataAccess } from "gadget-server/auth";
-import { MM_COLOUR, sendMessage } from "/gadget/app/api/utils";
+import { deleteMessage, MM_COLOUR, sendMessage } from "/gadget/app/api/utils";
+
+const MS_IN_HOUR = 3600000;
 
 export const run: ActionRun = async ({ params, record, logger, api, connections }) => {
   applyParams(params, record);
@@ -11,7 +13,7 @@ export const run: ActionRun = async ({ params, record, logger, api, connections 
   const { id: bountyChannelId } = guild.bountyChannel as { name: string; id: string };
   const { id: bountyHunterRoleId } = guild.bountyHunter as { name: string; id: string };
 
-  const expiresAt = new Date(Date.now() + (guild.bountyHours ?? 24) * 3600000);
+  const expiresAt = new Date(Date.now() + (guild.bountyHours ?? 24) * MS_IN_HOUR);
   const link = `https://discord.com/channels/${record.guildId}/${record.channelId}/${record.messageId}`;
   const bountyMessage = await sendMessage(bountyChannelId, {
     content: `<@&${bountyHunterRoleId}> Fresh meat, lads! Claim this bounty before it expires <t:${Math.floor(
@@ -38,6 +40,8 @@ export const run: ActionRun = async ({ params, record, logger, api, connections 
     allowed_mentions: { roles: [bountyHunterRoleId] },
   });
 
+  const previousBounty = await api.bounty.maybeFindFirst({ sort: { createdAt: "Descending" } });
+
   record.bountyMessageId = bountyMessage.id;
   record.bountyChannelId = bountyChannelId;
   record.expiresAt = expiresAt;
@@ -45,6 +49,24 @@ export const run: ActionRun = async ({ params, record, logger, api, connections 
 
   // schedule expiration
   api.enqueue(api.bounty.expire, { id: record.id }, { startAt: record.expiresAt });
+
+  if (guild.bountyReminderHours) {
+    // schedule reminder
+    api.enqueue(
+      api.bounty.remind,
+      { id: record.id },
+      { startAt: new Date(Date.now() + guild.bountyReminderHours * MS_IN_HOUR) },
+    );
+
+    // remove previous reminder
+    if (previousBounty?.reminderMessageId) {
+      const { id: bountyReminderChannelId } = guild.bountyReminderChannel as {
+        name: string;
+        id: string;
+      };
+      deleteMessage(bountyReminderChannelId, previousBounty.reminderMessageId);
+    }
+  }
 };
 
 export const options: ActionOptions = {

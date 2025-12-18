@@ -34,6 +34,7 @@ export const schema: GadgetModel = {
     formattedMessage: { type: "string", storageKey: "72GSwEQifnyE" },
     guildId: { type: "string", storageKey: "Oi61yZiVLPjI" },
     messageId: { type: "string", storageKey: "GE9B6jxlwQIA" },
+    reminderMessageId: { type: "string", storageKey: "gTPc_UR5FQud" },
     status: {
       type: "enum",
       default: "active",

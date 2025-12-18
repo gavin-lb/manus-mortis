@@ -25,6 +25,15 @@ export const schema: GadgetModel = {
       storageKey: "Go3vgI2kZXw5",
     },
     bountyPoster: { type: "json", storageKey: "SgnLpJ3-UP0h" },
+    bountyReminderChannel: {
+      type: "json",
+      storageKey: "vlg0FJPML3tX",
+    },
+    bountyReminderHours: {
+      type: "number",
+      decimals: 0,
+      storageKey: "m5X5qyoyspgJ",
+    },
     messagePoints: {
       type: "number",
       decimals: 0,
