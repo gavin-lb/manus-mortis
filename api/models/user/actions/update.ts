@@ -1,6 +1,6 @@
-import { applyParams, save, ActionOptions } from "gadget-server";
+import { ActionOptions, applyParams, save } from "gadget-server";
 
-export const run: ActionRun = async ({ params, record, logger, api, connections }) => {
+export const run: ActionRun = async ({ params, record }) => {
   applyParams(params, record);
   await save(record);
 };

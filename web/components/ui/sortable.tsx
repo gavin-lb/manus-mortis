@@ -218,9 +218,7 @@ function SortableRoot<T>(props: SortableRootProps<T>) {
         const activeValue = active.id.toString();
         if (over) {
           const overIndex = over.data.current?.sortable.index ?? 0;
-          return `Sortable item "${activeValue}" dropped at position ${overIndex + 1} of ${
-            value.length
-          }.`;
+          return `Sortable item "${activeValue}" dropped at position ${overIndex + 1} of ${value.length}.`;
         }
         return `Sortable item "${activeValue}" dropped. No changes were made.`;
       },
@@ -255,8 +253,8 @@ function SortableRoot<T>(props: SortableRootProps<T>) {
           orientation === "vertical"
             ? "up and down"
             : orientation === "horizontal"
-            ? "left and right"
-            : "arrow"
+              ? "left and right"
+              : "arrow"
         } keys to move the item.
         Press space or enter again to drop the item in its new position, or press escape to cancel.
       `,
@@ -392,7 +390,10 @@ function SortableItem(props: SortableItemProps) {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: value, disabled });
+  } = useSortable({
+    id: value,
+    disabled,
+  });
 
   const composedRef = useComposedRefs(ref, (node) => {
     if (disabled) return;

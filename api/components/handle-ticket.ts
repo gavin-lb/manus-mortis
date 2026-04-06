@@ -45,7 +45,10 @@ export default async (
     api.tickets.findByThreadId(interaction.channel.id),
     api.guild.findByServerId(interaction.guild!.id),
   ]);
-  const { id: handlerRoleId } = guildRecord.ticketsHandler as { name: string; id: string };
+  const { id: handlerRoleId } = guildRecord.ticketsHandler as {
+    name: string;
+    id: string;
+  };
 
   if (ticketRecord.status === "open") {
     if (interaction.member?.user.id === ticketRecord.ownerId) {

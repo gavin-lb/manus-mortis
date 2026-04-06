@@ -90,9 +90,17 @@ const AppFrame = ({ children, user, theme }: Props) => {
     { label: "Home", url: "/signed-in", icon: HomeIcon },
     { label: "Manage Users", url: "/manage-users", icon: PersonIcon },
     { label: "Welcome Messages", url: "/welcome-messages", icon: EmailIcon },
-    { label: "Tickets & Applications", url: "/tickets-applications", icon: ContractIcon },
+    {
+      label: "Tickets & Applications",
+      url: "/tickets-applications",
+      icon: ContractIcon,
+    },
     { label: "Points", url: "/points", icon: MoneyIcon },
-    { label: "Reaction Bounties", url: "/reaction-bounties", icon: CashDollarFilledIcon },
+    {
+      label: "Reaction Bounties",
+      url: "/reaction-bounties",
+      icon: CashDollarFilledIcon,
+    },
   ];
 
   const navigationMarkup = (

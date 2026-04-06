@@ -49,14 +49,14 @@ export const ApplicationQuestions = forwardRef<QuestionsRef, QuestionsProps>(
       else delete questionRefs.current[key];
     };
 
-    const [{ data: questionRecords, fetching }, _refetch] = useFindMany(api.question, {
+    const [{ data: questionRecords, fetching }] = useFindMany(api.question, {
       filter: { applicationId: { equals: applicationId ?? null } },
       sort: [{ index: "Ascending" }],
     });
 
     useEffect(() => {
       if (questionRecords && !isSubmitting) {
-        setQuestions(questionRecords.map((q) => ({ ...q, isNew: false } as ExistingQuestion)));
+        setQuestions(questionRecords.map((q) => ({ ...q, isNew: false }) as ExistingQuestion));
       }
     }, [questionRecords]);
 
@@ -76,7 +76,7 @@ export const ApplicationQuestions = forwardRef<QuestionsRef, QuestionsProps>(
     const validate = async () => {
       const entries = Object.entries(questionRefs.current);
       const isNoQuestions = entries.length === 0;
-      const validateAll = await Promise.all(entries.map(([_, { validate }]) => validate()));
+      const validateAll = await Promise.all(entries.map(([, { validate }]) => validate()));
       const firstInvalidQuestionIndex = validateAll.findIndex((v) => v === false);
       const questionsIsValid = firstInvalidQuestionIndex === -1;
       if (isNoQuestions) {

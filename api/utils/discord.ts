@@ -170,7 +170,11 @@ export function isTimestampOptions(options: unknown): options is TimestampOption
 export function buildTimestamp(options: TimestampOptions) {
   const currentDate = new Date(Date.now() + options.timezone * 3600000);
   const [currentDay, currentMonth, currentYear] = currentDate
-    .toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
+    .toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    })
     .split(" ");
   const day = options.day ?? currentDay;
   const month = options.month ?? currentMonth;

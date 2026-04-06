@@ -32,7 +32,10 @@ export async function handle(...args: ClientEvents[typeof name]): Promise<void> 
   const [oldState, newState] = args;
   logger.debug({ oldState, newState }, "Voice event");
 
-  const record = await api.point.upsert({ userId: oldState.id, on: ["userId"] });
+  const record = await api.point.upsert({
+    userId: oldState.id,
+    on: ["userId"],
+  });
 
   const oldChannel = oldState.channelId;
   const newChannel = newState.channelId;

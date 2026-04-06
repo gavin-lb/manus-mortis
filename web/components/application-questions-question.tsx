@@ -72,8 +72,10 @@ export interface StringSelectOption extends APISelectMenuOption {
   roles: string[];
 }
 
-export interface QuestionRecord
-  extends Omit<GadgetRecord<GadgetQuestionRecord>, "stringSelectOptions"> {
+export interface QuestionRecord extends Omit<
+  GadgetRecord<GadgetQuestionRecord>,
+  "stringSelectOptions"
+> {
   stringSelectOptions: StringSelectOption[] | null;
 }
 
@@ -169,7 +171,11 @@ export function UserReferral({ question }: { question: Question }) {
     const { title, description, isRequired } =
       question.type === QuestionType.UserSelect
         ? question
-        : { title: defaultTitle, description: defaultDescription, isRequired: false };
+        : {
+            title: defaultTitle,
+            description: defaultDescription,
+            isRequired: false,
+          };
 
     setValue("question.title", title, { shouldDirty: true });
     setValue("question.description", description, { shouldDirty: true });
@@ -195,7 +201,7 @@ export function UserReferral({ question }: { question: Question }) {
   return <></>;
 }
 
-export function TextInputQuestion({ question }: TextInputQuestionProps) {
+export function TextInputQuestion({}: TextInputQuestionProps) {
   const { watch, setValue, getFieldState, clearErrors } = useFormContext();
   const { question: values } = watch();
 
@@ -252,7 +258,7 @@ export function StringSelectQuestion({
   onOptionsChange,
 }: StringSelectQuestionProps) {
   const { roles } = useLoaderData<{ roles: APIRole[] }>();
-  const { setValue, watch, formState } = useFormContext();
+  const { watch, formState } = useFormContext();
   const [focusedIndex, setFocusedIndex] = useState<number>();
   const [options] = useState(question.stringSelectOptions ?? [{ label: "", value: "", roles: [] }]);
   const { question: values } = watch();
@@ -453,7 +459,7 @@ export const ApplicationQuestionsQuestion = forwardRef<QuestionRef, QuestionProp
     useImperativeHandle(
       ref,
       () => ({
-        submit: (id: String) => {
+        submit: (id: string) => {
           setValue("question.application", { _link: id });
           return submit() as any as Promise<FormSubmitResult>;
         },

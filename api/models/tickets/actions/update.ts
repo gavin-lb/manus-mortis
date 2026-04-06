@@ -2,7 +2,7 @@ import { ActionOptions, applyParams, save } from "gadget-server";
 import { preventCrossUserDataAccess } from "gadget-server/auth";
 import { buildTicketMessage, editChannel, editMessage } from "/gadget/app/api/utils";
 
-export const run: ActionRun = async ({ params, record, logger, api, connections }) => {
+export const run: ActionRun = async ({ params, record }) => {
   await preventCrossUserDataAccess(params, record);
   applyParams(params, record);
 
@@ -11,7 +11,9 @@ export const run: ActionRun = async ({ params, record, logger, api, connections 
   }
 
   if (params.tickets?.title) {
-    editChannel(record.threadId, { name: `✉️[@${record.ownerName}] ${record.title}` });
+    editChannel(record.threadId, {
+      name: `✉️[@${record.ownerName}] ${record.title}`,
+    });
   }
 
   await save(record);

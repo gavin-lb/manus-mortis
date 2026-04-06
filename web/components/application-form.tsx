@@ -103,6 +103,18 @@ export const ApplicationForm = forwardRef<ApplicationFormRef, ApplicationFormPro
           error={(formState.errors.application as any)?.roles?.message}
         />
         <AutoHiddenInput field="roles" value={selectedRecord?.roles} />
+
+        <RoleMultiselector
+          label="Remove roles"
+          helpText="(Optional) The roles which will be removed from a successful applicant"
+          roles={roles}
+          onSelectionChange={(newRoles) => {
+            setValue("application.removeRoles", newRoles, { shouldDirty: true });
+          }}
+          selected={(selectedRecord?.removeRoles as APIRole[] | null) ?? undefined}
+          error={(formState.errors.application as any)?.removeRoles?.message}
+        />
+        <AutoHiddenInput field="removeRoles" value={selectedRecord?.removeRoles} />
       </>
     );
   },

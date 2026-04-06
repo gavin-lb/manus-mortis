@@ -1,6 +1,7 @@
 import { JSONValue } from "@gadget-client/manus-mortis";
 import {
-  APIModalSubmitInteraction,
+  APIGuildInteractionWrapper,
+  APIModalSubmitGuildInteraction,
   ContainerBuilder,
   InteractionResponseType,
   MessageFlags,
@@ -9,8 +10,11 @@ import {
 import { api } from "gadget-server";
 import { MM_COLOUR, MM_EMOJI } from "../utils";
 
-export default async (interaction: APIModalSubmitInteraction, applicationId: string) => {
-  const user = interaction.member?.user!;
+export default async (
+  interaction: APIGuildInteractionWrapper<APIModalSubmitGuildInteraction>,
+  applicationId: string,
+) => {
+  const user = interaction.member.user;
 
   const submittedApplication = await api.submittedApplications.create({
     ownerName: user.global_name ?? user.username,

@@ -2,20 +2,16 @@
   "compilerOptions": {
     "strict": true,
     "esModuleInterop": true,
-    "allowJs": true,
-    "checkJs": true,
+    "allowJs": false,
     "noImplicitAny": true,
     "noEmit": true,
     "sourceMap": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "forceConsistentCasingInFileNames": true,
-    "target": "es2020",
-    "lib": [
-      "es2020",
-      "DOM",
-      "ESNext"
-    ],
+    "target": "esnext",
+    "module": "esnext",
+    "lib": ["DOM", "ESNext"],
     "skipLibCheck": true,
     "jsx": "react-jsx",
     "moduleResolution": "bundler",
@@ -26,8 +22,5 @@
       "/gadget/app/*": ["*"]
     }
   },
-  "exclude": [
-    "node_modules",
-    ".gadget"
-  ]
+  "exclude": ["node_modules", ".gadget"]
 }

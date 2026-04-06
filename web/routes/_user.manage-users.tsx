@@ -64,7 +64,10 @@ export default () => {
 
   const userMap = Object.fromEntries(users.map((user) => [user.discordId, user]));
   const roleMap = Object.fromEntries(roles.map((role) => [role.id, role]));
-  const roleOptions = roles.map((role) => ({ label: role.name, value: role.id }));
+  const roleOptions = roles.map((role) => ({
+    label: role.name,
+    value: role.id,
+  }));
   const [autoCompleteOptions, setAutoCompleteOptions] = useState(roleOptions);
   const [autocompleteInput, setAutocompleteInput] = useState<string>("");
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
@@ -131,7 +134,7 @@ export default () => {
   const maxPage = Math.ceil(sortedMembers.length / pageSize);
 
   function onSortChange(selected: (typeof sortOptions)[number]["value"]) {
-    const [_, direction] = selected.split(" ");
+    const [, direction] = selected.split(" ");
     setSearchParams({ sort: direction });
   }
 
@@ -233,9 +236,7 @@ export default () => {
   if (selectedRoles.length) {
     appliedFilters.push({
       key: "role",
-      label: `has role${selectedRoles.length > 1 ? "s" : ""} ${selectedRoles
-        .map((r) => roleMap[r].name)
-        .join(", ")}`,
+      label: `has role${selectedRoles.length > 1 ? "s" : ""} ${selectedRoles.map((r) => roleMap[r].name).join(", ")}`,
       onRemove: () => {
         setSelectedRoles([]);
         setSelected([]);

@@ -44,6 +44,11 @@ export const schema: GadgetModel = {
       children: { model: "question", belongsToField: "application" },
       storageKey: "CtbpzVE-O_Bq",
     },
+    removeRoles: {
+      type: "json",
+      default: [],
+      storageKey: "ARiQE1GM_i5t",
+    },
     roles: { type: "json", storageKey: "7keXNa_-iojO" },
     submittedApplications: {
       type: "hasMany",

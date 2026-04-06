@@ -9,16 +9,16 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
-import type { GadgetConfig } from "gadget-server";
-import type { ThemeName } from '@shopify/polaris-tokens';
-import { Suspense, useState, useEffect } from "react";
-import { api } from "./api";
 import { AppProvider } from "@shopify/polaris";
-import translations from "@shopify/polaris/locales/en.json";
+import type { ThemeName } from "@shopify/polaris-tokens";
 import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
-import styles from "./app.css?url";
 import { LinkLikeComponentProps } from "@shopify/polaris/build/ts/src/utilities/link";
+import translations from "@shopify/polaris/locales/en.json";
 import { parse } from "cookie";
+import type { GadgetConfig } from "gadget-server";
+import { Suspense, useState } from "react";
+import { api } from "./api";
+import styles from "./app.css?url";
 
 export const links = () => [
   { rel: "stylesheet", href: styles },
@@ -46,39 +46,40 @@ export type RootOutletContext = {
   setTheme: (theme: ThemeName) => void;
 };
 
-
 export const loader = async ({ context, request }: LoaderFunctionArgs) => {
   const { gadgetConfig } = context;
   const cookie = parse(request.headers.get("Cookie") ?? "");
   const savedTheme = cookie.theme as ThemeName | undefined;
 
-  return { gadgetConfig, savedTheme};
+  return { gadgetConfig, savedTheme };
 };
 
 export default function App() {
-  const { gadgetConfig, savedTheme } = useLoaderData<typeof loader>();;
+  const { gadgetConfig, savedTheme } = useLoaderData<typeof loader>();
   const [theme, setTheme] = useState<ThemeName>(savedTheme ?? "dark-experimental");
 
-  const context: RootOutletContext = { gadgetConfig, theme, setTheme }
+  const context: RootOutletContext = { gadgetConfig, theme, setTheme };
 
   return (
-    <html lang="en" className={`p-theme-${theme} ${theme === "dark-experimental" ? "dark" : "light"}`}> 
+    <html
+      lang="en"
+      className={`p-theme-${theme} ${theme === "dark-experimental" ? "dark" : "light"}`}
+    >
       <head>
         <Meta />
         <Links />
       </head>
-        <body>
-          <AppProvider i18n={translations} theme={theme} linkComponent={LinkWrapper}> 
-            <Suspense>
-              <GadgetProvider api={api}>
-                <Outlet context={context} />
-              </GadgetProvider>
-            </Suspense>
-          </AppProvider> 
-          <ScrollRestoration />
-          <Scripts />
-        </body>
+      <body>
+        <AppProvider i18n={translations} theme={theme} linkComponent={LinkWrapper}>
+          <Suspense>
+            <GadgetProvider api={api}>
+              <Outlet context={context} />
+            </GadgetProvider>
+          </Suspense>
+        </AppProvider>
+        <ScrollRestoration />
+        <Scripts />
+      </body>
     </html>
   );
 }
-

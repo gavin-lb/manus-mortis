@@ -1,6 +1,6 @@
-import { deleteRecord, ActionOptions } from "gadget-server";
+import { ActionOptions, deleteRecord } from "gadget-server";
 
-export const run: ActionRun = async ({ params, record, logger, api, connections }) => {
+export const run: ActionRun = async ({ record }) => {
   await deleteRecord(record);
 };
 

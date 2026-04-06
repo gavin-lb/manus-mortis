@@ -19,7 +19,7 @@ export function formatSeconds(seconds: number): string {
  * @param  {String}    str    The input string.
  * @return {String}           The `Title Case`/`TitleCase` string.
  */
-export function toTitleCase(str: String): string {
+export function toTitleCase(str: string): string {
   const [delim, sep] = str.includes(" ") ? [" ", " "] : ["_", ""];
   return str
     .toLowerCase()
@@ -33,7 +33,7 @@ export function toTitleCase(str: String): string {
  * @param  {String}    str    The input string.
  * @return {String}           The `snake_case` string.
  */
-export function toSnakeCase(str: String): string {
+export function toSnakeCase(str: string): string {
   return (
     str.includes(" ") ? str.replace(" ", "_") : str.replace(/(?<=.)[A-Z]/g, (char) => `_${char}`)
   ).toLowerCase();
@@ -44,7 +44,7 @@ export function toSnakeCase(str: String): string {
  * @param  {String}    str    The input string.
  * @return {String}           The `kebab-case` string.
  */
-export function toKebabCase(str: String): string {
+export function toKebabCase(str: string): string {
   return toSnakeCase(str).replaceAll("_", "-");
 }
 

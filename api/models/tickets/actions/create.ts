@@ -3,13 +3,19 @@ import { ActionOptions, applyParams, save } from "gadget-server";
 import { preventCrossUserDataAccess } from "gadget-server/auth";
 import { buildTicketMessage, createThread, sendMessage } from "/gadget/app/api/utils";
 
-export const run: ActionRun = async ({ params, record, logger, api, connections }) => {
+export const run: ActionRun = async ({ params, record, api }) => {
   await preventCrossUserDataAccess(params, record);
   applyParams(params, record);
 
   const guildRecord = await api.guild.findByServerId(process.env.SERVER_ID!);
-  const { id: channelId } = guildRecord.ticketsChannel as { name: string; id: string };
-  const { id: handlerRoleId } = guildRecord.ticketsHandler as { name: string; id: string };
+  const { id: channelId } = guildRecord.ticketsChannel as {
+    name: string;
+    id: string;
+  };
+  const { id: handlerRoleId } = guildRecord.ticketsHandler as {
+    name: string;
+    id: string;
+  };
 
   const thread = await createThread(channelId, {
     name: `✉️[@${record.ownerName}] ${record.title}`,

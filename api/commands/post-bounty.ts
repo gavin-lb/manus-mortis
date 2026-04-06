@@ -30,10 +30,12 @@ export default {
       };
     }
 
-    const [[_, message]] = Object.entries(interaction.data.resolved.messages);
+    const [[, message]] = Object.entries(interaction.data.resolved.messages);
     const formattedMessage = truncate(
       message.content.replace(/<:.+?:.+?>/g, "").replace(/\n/g, "\n > "),
-      { length: 300 },
+      {
+        length: 300,
+      },
     );
 
     const bounty = await api.bounty.create({

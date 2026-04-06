@@ -50,11 +50,7 @@ export const EmojiPicker = ({
             ) : emoji === undefined ? (
               SmileyHappyIcon
             ) : (
-              <Emoji
-                unified={emoji.id}
-                size={16}
-                emojiStyle={EmojiStyle.TWITTER}
-              />
+              <Emoji unified={emoji.id} size={16} emojiStyle={EmojiStyle.TWITTER} />
             )
           }
           variant="tertiary"

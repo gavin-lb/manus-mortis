@@ -8,14 +8,18 @@ export const run: ActionRun = async ({ params, record, logger, api, connections 
   await preventCrossUserDataAccess(params, record);
 
   const guild = await api.guild.findByServerId(process.env.SERVER_ID!);
-  const { id: channelId } = guild.bountyReminderChannel as { name: string; id: string };
-  const { id: posterRoleId } = guild.bountyPoster as { name: string; id: string };
+  const { id: channelId } = guild.bountyReminderChannel as {
+    name: string;
+    id: string;
+  };
+  const { id: posterRoleId } = guild.bountyPoster as {
+    name: string;
+    id: string;
+  };
 
   const link = `https://discord.com/channels/${record.guildId}/${record.channelId}/${record.messageId}`;
   const reminderMessage = await sendMessage(channelId, {
-    content: `<@&${posterRoleId}> Previous bounty was posted <t:${Math.floor(
-      record.createdAt.getTime() / 1000,
-    )}:R>!`,
+    content: `<@&${posterRoleId}> Previous bounty was posted <t:${Math.floor(record.createdAt.getTime() / 1000)}:R>!`,
     embeds: [
       new EmbedBuilder()
         .setColor(MM_COLOUR)

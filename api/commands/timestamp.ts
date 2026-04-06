@@ -19,7 +19,11 @@ const formatOptions = [
   { label: "Long time", description: "(04:20:00 PM)", value: "T" },
   { label: "Short date", description: "(20/04/2025)", value: "d" },
   { label: "Long date", description: "(20 April 2025)", value: "D" },
-  { label: "Long date with short time", description: "(20 April 2025 at 04:20 PM)", value: "f" },
+  {
+    label: "Long date with short time",
+    description: "(20 April 2025 at 04:20 PM)",
+    value: "f",
+  },
   {
     label: "Long date with day of the week and short time",
     description: "(Saturday, 20 April 2025 at 04:20 PM)",
@@ -35,10 +39,19 @@ const timezoneOptions = [
   { label: "Central Daylight Time", description: "CDT (UTC-5)", value: "-5" },
   { label: "Eastern Standard Time", description: "EST (UTC-5)", value: "-05" },
   { label: "Eastern Daylight Time", description: "EDT (UTC-4)", value: "-4" },
-  { label: "Greenwich Mean Time", description: "GMT (UTC+0)", value: "+0", default: true },
+  {
+    label: "Greenwich Mean Time",
+    description: "GMT (UTC+0)",
+    value: "+0",
+    default: true,
+  },
   { label: "British Summer Time", description: "BST (UTC+1)", value: "+1" },
   { label: "Central European Time", description: "CET (UTC+1)", value: "+01" },
-  { label: "Central European Summer Time", description: "CEST (UTC+2)", value: "+2" },
+  {
+    label: "Central European Summer Time",
+    description: "CEST (UTC+2)",
+    value: "+2",
+  },
 ];
 
 const hourOptions = Array.from({ length: 24 }, (_, i) => ({
@@ -177,7 +190,10 @@ export default {
               new LabelBuilder().setLabel("Hour").setStringSelectMenuComponent((builder) =>
                 builder
                   .addOptions(
-                    ...hourOptions.map((option, index) => ({ ...option, default: index === hour })),
+                    ...hourOptions.map((option, index) => ({
+                      ...option,
+                      default: index === hour,
+                    })),
                   )
                   .setCustomId("hour")
                   .setPlaceholder("Select the hour of the input time"),

@@ -63,13 +63,10 @@ export default function () {
 
   const memberById = Object.fromEntries(members.map((member) => [member.user.id, member]));
 
-  const handleDropZoneDrop = useCallback(
-    (_dropFiles: File[], acceptedFiles: File[], _rejectedFiles: File[]) => {
-      setFile(acceptedFiles[0]);
-      setFileError(undefined);
-    },
-    [],
-  );
+  const handleDropZoneDrop = useCallback((_dropFiles: File[], acceptedFiles: File[]) => {
+    setFile(acceptedFiles[0]);
+    setFileError(undefined);
+  }, []);
 
   const handleImport = async () => {
     if (!file) return;
@@ -97,7 +94,7 @@ export default function () {
           header.map((key, index) => [key, key === "userId" ? row[index] : Number(row[index])]),
         ),
       );
-    } catch (err) {
+    } catch {
       setImporting(false);
       setFileError("Malformed file data");
       return;

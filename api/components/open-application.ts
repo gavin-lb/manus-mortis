@@ -1,7 +1,4 @@
-import {
-  APIMessageUserSelectInteractionData,
-  InteractionResponseType,
-} from "discord.js";
+import { APIMessageUserSelectInteractionData, InteractionResponseType } from "discord.js";
 import { api } from "gadget-server";
 
 export default async ({

@@ -42,9 +42,16 @@ export default async (
   interaction: APIMessageComponentInteraction,
 ): Promise<APIInteractionResponse> => {
   const record = await api.submittedApplications.findByThreadId(interaction.channel.id, {
-    select: { status: true, ownerId: true, application: { handlerRole: true } },
+    select: {
+      status: true,
+      ownerId: true,
+      application: { handlerRole: true },
+    },
   });
-  const { id: handlerRoleId } = record.application.handlerRole as { name: string; id: string };
+  const { id: handlerRoleId } = record.application.handlerRole as {
+    name: string;
+    id: string;
+  };
 
   if (record.status === "open") {
     if (interaction.member?.user.id === record.ownerId) {

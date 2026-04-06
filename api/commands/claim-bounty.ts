@@ -17,7 +17,7 @@ export default {
   execute: async (interaction: APIMessageApplicationCommandInteraction) => {
     const userId = interaction.member!.user.id;
 
-    const [[_, message]] = Object.entries(interaction.data.resolved.messages);
+    const [[, message]] = Object.entries(interaction.data.resolved.messages);
 
     const bounty = await api.bounty.maybeFindFirst({
       filter: {
@@ -41,9 +41,7 @@ export default {
       return {
         type: InteractionResponseType.ChannelMessageWithSource,
         data: {
-          content: `⚠️ Oops! This bounty expired <t:${Math.floor(
-            bounty.expiresAt!.getTime() / 1000,
-          )}:R>`,
+          content: `⚠️ Oops! This bounty expired <t:${Math.floor(bounty.expiresAt!.getTime() / 1000)}:R>`,
           flags: MessageFlags.Ephemeral,
         },
       };

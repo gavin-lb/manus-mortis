@@ -22,7 +22,7 @@ import { createThread, MM_COLOUR, sendMessage } from "/gadget/app/api/utils";
 
 const NO_RESPONSE = "No response given";
 
-export const run: ActionRun = async ({ params, record, logger, api, connections }) => {
+export const run: ActionRun = async ({ params, record, api }) => {
   await preventCrossUserDataAccess(params, record);
   applyParams(params, record);
 
@@ -36,8 +36,14 @@ export const run: ActionRun = async ({ params, record, logger, api, connections 
     questionRecords.map((question) => [question.id, question]),
   );
 
-  const { id: channelId } = applicationRecord.channel as { id: string; name: string };
-  const { id: handlerRoleId } = applicationRecord.handlerRole as { id: string; name: string };
+  const { id: channelId } = applicationRecord.channel as {
+    id: string;
+    name: string;
+  };
+  const { id: handlerRoleId } = applicationRecord.handlerRole as {
+    id: string;
+    name: string;
+  };
   let emojiName: string | undefined;
   if (applicationRecord.emoji) {
     emojiName = (applicationRecord.emoji as { id: string; name: string }).name;
@@ -46,7 +52,11 @@ export const run: ActionRun = async ({ params, record, logger, api, connections 
   const roles = ((applicationRecord.roles ?? []) as { name: string; id: string }[]).map(
     (role: { name: string; id: string }) => role.id,
   );
-  const data = record.data as any as APIModalSubmission;
+  const removeRoles = ((applicationRecord.removeRoles ?? []) as { name: string; id: string }[]).map(
+    (role: { name: string; id: string }) => role.id,
+  );
+
+  const data = record.data as unknown as APIModalSubmission;
   const components = data.components as ModalSubmitLabelComponent[];
 
   const answers = await Promise.all(
@@ -71,8 +81,8 @@ export const run: ActionRun = async ({ params, record, logger, api, connections 
           );
           break;
 
-        case ComponentType.StringSelect:
-          const options = question.stringSelectOptions as any as StringSelectOption[];
+        case ComponentType.StringSelect: {
+          const options = question.stringSelectOptions as unknown as StringSelectOption[];
           container.addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
               answer.values
@@ -85,6 +95,7 @@ export const run: ActionRun = async ({ params, record, logger, api, connections 
             ),
           );
           break;
+        }
 
         case ComponentType.FileUpload:
           if (answer.values.length > 0) {
@@ -108,21 +119,23 @@ export const run: ActionRun = async ({ params, record, logger, api, connections 
           container.addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
               answer.values.length > 0
-                ? answer.values
-                    .map(async (id) => {
-                      if (id === record.ownerId) return "Nice try, but you cannot refer yourself";
+                ? (
+                    await Promise.all(
+                      answer.values.map(async (id) => {
+                        if (id === record.ownerId) return "Nice try, but you cannot refer yourself";
 
-                      const pointRecord = await api.internal.point.upsert({
-                        userId: id,
-                        _atomics: {
-                          referralCount: { increment: 1 },
-                        },
-                        on: ["userId"],
-                      });
-                      api.point.computePoints(pointRecord.id);
-                      return `<@${id}>`;
-                    })
-                    .join(", ")
+                        const pointRecord = await api.internal.point.upsert({
+                          userId: id,
+                          _atomics: {
+                            referralCount: { increment: 1 },
+                          },
+                          on: ["userId"],
+                        });
+                        api.point.computePoints(pointRecord.id);
+                        return `<@${id}>`;
+                      }),
+                    )
+                  ).join(", ")
                 : NO_RESPONSE,
             ),
           );
@@ -155,6 +168,7 @@ export const run: ActionRun = async ({ params, record, logger, api, connections 
   });
 
   record.roles = roles;
+  record.removeRoles = removeRoles;
   record.threadId = thread.id;
   record.channelId = channelId;
 

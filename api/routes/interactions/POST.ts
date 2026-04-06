@@ -33,15 +33,15 @@ async function handleInteraction(interaction: APIInteraction) {
       return { type: InteractionResponseType.Pong };
 
     case InteractionType.ApplicationCommand:
-      const { default: command } = require(`/gadget/app/api/commands/${toKebabCase(
-        interaction.data.name,
-      )}`);
+      const { default: command } = require(
+        `/gadget/app/api/commands/${toKebabCase(interaction.data.name)}`,
+      );
       return await command.execute(interaction);
 
     case InteractionType.MessageComponent:
-      const { default: component } = require(`/gadget/app/api/components/${toKebabCase(
-        interaction.data.custom_id,
-      )}`);
+      const { default: component } = require(
+        `/gadget/app/api/components/${toKebabCase(interaction.data.custom_id)}`,
+      );
       return await component(interaction);
 
     case InteractionType.ModalSubmit:

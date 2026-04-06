@@ -24,7 +24,9 @@ export function FormSelector({
   required,
   ...props
 }: Props) {
-  const data = useLoaderData<{ [key: string]: { id: string; name: string }[] }>()[loaderData];
+  const data = useLoaderData<{
+    [key: string]: { id: string; name: string }[];
+  }>()[loaderData];
   const [input, setInput] = useState("");
   const [options, setOptions] = useState(data);
   const { formState, setValue, clearErrors, setError } = useFormContext();
@@ -35,7 +37,9 @@ export function FormSelector({
 
   useEffect(() => {
     if (record && !isRecordinData) {
-      setError(`${model}.${field}`, { message: "Previous value no longer exists" });
+      setError(`${model}.${field}`, {
+        message: "Previous value no longer exists",
+      });
     }
   }, []);
 

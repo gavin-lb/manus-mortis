@@ -1,1 +1,1 @@
-export { loader, default } from '@/routes/_anon.sign-in';
+export { loader, default } from "@/routes/_anon.sign-in";

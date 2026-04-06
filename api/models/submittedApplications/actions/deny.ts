@@ -27,7 +27,10 @@ export const run: ActionRun = async ({ params, record, logger, api, connections 
           "Regrettably, your application to Manus Mortis has been denied at this time.",
         )
         .setFields({ name: "Comments:", value: params.reason! })
-        .setFooter({ text: `Handled by @${params.name}`, iconURL: params.avatar })
+        .setFooter({
+          text: `Handled by @${params.name}`,
+          iconURL: params.avatar,
+        })
         .setTimestamp()
         .toJSON(),
     ],

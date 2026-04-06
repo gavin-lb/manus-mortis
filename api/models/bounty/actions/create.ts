@@ -5,13 +5,19 @@ import { deleteMessage, MM_COLOUR, sendMessage } from "/gadget/app/api/utils";
 
 const MS_IN_HOUR = 3600000;
 
-export const run: ActionRun = async ({ params, record, logger, api, connections }) => {
+export const run: ActionRun = async ({ params, record, api }) => {
   applyParams(params, record);
   await preventCrossUserDataAccess(params, record);
 
   const guild = await api.guild.findByServerId(process.env.SERVER_ID!);
-  const { id: bountyChannelId } = guild.bountyChannel as { name: string; id: string };
-  const { id: bountyHunterRoleId } = guild.bountyHunter as { name: string; id: string };
+  const { id: bountyChannelId } = guild.bountyChannel as {
+    name: string;
+    id: string;
+  };
+  const { id: bountyHunterRoleId } = guild.bountyHunter as {
+    name: string;
+    id: string;
+  };
 
   const expiresAt = new Date(Date.now() + (guild.bountyHours ?? 24) * MS_IN_HOUR);
   const link = `https://discord.com/channels/${record.guildId}/${record.channelId}/${record.messageId}`;
@@ -40,7 +46,9 @@ export const run: ActionRun = async ({ params, record, logger, api, connections 
     allowed_mentions: { roles: [bountyHunterRoleId] },
   });
 
-  const previousBounty = await api.bounty.maybeFindFirst({ sort: { createdAt: "Descending" } });
+  const previousBounty = await api.bounty.maybeFindFirst({
+    sort: { createdAt: "Descending" },
+  });
 
   record.bountyMessageId = bountyMessage.id;
   record.bountyChannelId = bountyChannelId;
@@ -55,7 +63,9 @@ export const run: ActionRun = async ({ params, record, logger, api, connections 
     api.enqueue(
       api.bounty.remind,
       { id: record.id },
-      { startAt: new Date(Date.now() + guild.bountyReminderHours * MS_IN_HOUR) },
+      {
+        startAt: new Date(Date.now() + guild.bountyReminderHours * MS_IN_HOUR),
+      },
     );
 
     // remove previous reminder

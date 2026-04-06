@@ -1,5 +1,4 @@
 import {
-  APIApplicationCommandInteraction,
   ApplicationIntegrationType,
   InteractionContextType,
   InteractionResponseType,
@@ -14,7 +13,7 @@ export default {
     .setContexts(InteractionContextType.Guild)
     .setIntegrationTypes([ApplicationIntegrationType.GuildInstall]),
 
-  execute: (interaction: APIApplicationCommandInteraction) => ({
+  execute: () => ({
     type: InteractionResponseType.ChannelMessageWithSource,
     data: {
       content: "Pong!",

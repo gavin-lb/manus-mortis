@@ -1,5 +1,5 @@
 import {
-  APIModalSubmitInteraction,
+  APIModalSubmitGuildInteraction,
   APIModalSubmitStringSelectComponent,
   APIModalSubmitTextInputComponent,
   InteractionResponseType,
@@ -22,7 +22,7 @@ const MONTHS = [
   "Dec",
 ] as const;
 
-export default async (interaction: APIModalSubmitInteraction) => {
+export default async (interaction: APIModalSubmitGuildInteraction) => {
   const [
     {
       component: {
@@ -48,10 +48,18 @@ export default async (interaction: APIModalSubmitInteraction) => {
       component: { value: date },
     },
   ] = interaction.data.components as [
-    ModalSubmitLabelComponent & { component: APIModalSubmitStringSelectComponent },
-    ModalSubmitLabelComponent & { component: APIModalSubmitStringSelectComponent },
-    ModalSubmitLabelComponent & { component: APIModalSubmitStringSelectComponent },
-    ModalSubmitLabelComponent & { component: APIModalSubmitStringSelectComponent },
+    ModalSubmitLabelComponent & {
+      component: APIModalSubmitStringSelectComponent;
+    },
+    ModalSubmitLabelComponent & {
+      component: APIModalSubmitStringSelectComponent;
+    },
+    ModalSubmitLabelComponent & {
+      component: APIModalSubmitStringSelectComponent;
+    },
+    ModalSubmitLabelComponent & {
+      component: APIModalSubmitStringSelectComponent;
+    },
     ModalSubmitLabelComponent & { component: APIModalSubmitTextInputComponent },
   ];
   const [year, numericMonth, day] = date.split("-");

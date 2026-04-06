@@ -1,12 +1,12 @@
 import {
-  APIModalSubmitInteraction,
+  APIModalSubmitGuildInteraction,
   APIModalSubmitTextInputComponent,
   InteractionResponseType,
 } from "discord.js";
 import { api } from "gadget-server";
 import { deleteParentMessage } from "../utils";
 
-export default async (interaction: APIModalSubmitInteraction) => {
+export default async (interaction: APIModalSubmitGuildInteraction) => {
   const [
     {
       component: { value: title },
@@ -14,7 +14,9 @@ export default async (interaction: APIModalSubmitInteraction) => {
     {
       component: { value: body },
     },
-  ] = interaction.data.components as { component: APIModalSubmitTextInputComponent }[];
+  ] = interaction.data.components as {
+    component: APIModalSubmitTextInputComponent;
+  }[];
 
   const ticketRecord = await api.tickets.findByThreadId(interaction.channel!.id);
   api.tickets.update(ticketRecord.id, { title, body });

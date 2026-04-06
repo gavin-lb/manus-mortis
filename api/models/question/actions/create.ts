@@ -4,7 +4,7 @@ import { preventCrossUserDataAccess } from "gadget-server/auth";
 export const run: ActionRun = async ({ params, record, logger, api, connections }) => {
   applyParams(params, record);
   await preventCrossUserDataAccess(params, record);
-  api.application.update(record.applicationId, {})
+  api.application.update(record.applicationId, {});
   await save(record);
 };
 

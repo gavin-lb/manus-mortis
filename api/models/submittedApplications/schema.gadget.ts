@@ -33,6 +33,7 @@ export const schema: GadgetModel = {
       validations: { required: true },
       storageKey: "CTVWmHBPxDQy",
     },
+    removeRoles: { type: "json", storageKey: "DVoHEdOB9Ebp" },
     roles: { type: "json", storageKey: "wryN1lXYjTyt" },
     status: {
       type: "enum",

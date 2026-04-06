@@ -3,7 +3,7 @@ import { preventCrossUserDataAccess } from "gadget-server/auth";
 
 export const run: ActionRun = async ({ params, record, logger, api, connections }) => {
   await preventCrossUserDataAccess(params, record);
-  api.application.update(record.applicationId, {})
+  api.application.update(record.applicationId, {});
   await deleteRecord(record);
 };
 

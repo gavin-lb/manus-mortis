@@ -1,5 +1,6 @@
 import {
-  APIModalSubmitInteraction,
+  APIGuildInteractionWrapper,
+  APIModalSubmitGuildInteraction,
   APIModalSubmitTextInputComponent,
   ContainerBuilder,
   InteractionResponseType,
@@ -9,7 +10,7 @@ import {
 import { api } from "gadget-server";
 import { getAvatarURL, MM_COLOUR, MM_EMOJI } from "../utils";
 
-export default async (interaction: APIModalSubmitInteraction) => {
+export default async (interaction: APIGuildInteractionWrapper<APIModalSubmitGuildInteraction>) => {
   const [
     {
       component: { value: title },
@@ -17,9 +18,11 @@ export default async (interaction: APIModalSubmitInteraction) => {
     {
       component: { value: body },
     },
-  ] = interaction.data.components as { component: APIModalSubmitTextInputComponent }[];
+  ] = interaction.data.components as {
+    component: APIModalSubmitTextInputComponent;
+  }[];
 
-  const user = interaction.member?.user!;
+  const user = interaction.member.user;
 
   const ticket = await api.tickets.create({
     title,

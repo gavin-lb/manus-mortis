@@ -3,7 +3,7 @@ import { ApplicationForm, ApplicationFormRef } from "@/components/application-fo
 import { ApplicationQuestions, QuestionsRef } from "@/components/application-questions";
 import { QuestionType, StringSelectOption } from "@/components/application-questions-question";
 import { FormSelector } from "@/components/form-selector";
-import { ApplicationRecord, QuestionRecord } from "@gadget-client/manus-mortis";
+import { ApplicationRecord, GadgetRecord, QuestionRecord } from "@gadget-client/manus-mortis";
 import { useAction, useFindBy } from "@gadgetinc/react";
 import { AutoForm, AutoHiddenInput, AutoSubmit, AutoTable } from "@gadgetinc/react/auto/polaris";
 import { LoaderFunction } from "@remix-run/node";
@@ -43,19 +43,19 @@ import { useRef, useState } from "react";
 export type FormSubmitResult = {
   fetching: boolean;
   stale: boolean;
-  data?: any;
+  data?: GadgetRecord<never>;
   error?:
     | {
         message: string;
         executionErrors: Error[];
         networkError?: Error | undefined;
-        response?: any;
+        response?: unknown;
         name: string;
         stack?: string | undefined;
         cause?: unknown;
       }
     | undefined;
-  extensions?: { [x: string]: any } | undefined;
+  extensions?: { [x: string]: unknown } | undefined;
   operation?: unknown | undefined;
 };
 export type FormValidate = () => Promise<boolean>;
@@ -102,14 +102,16 @@ export default function () {
   const toggleCloseConfirm = () => setCloseConfirmActive((active) => !active);
 
   const handleSubmit = async () => {
+    if (!applicationFormRef.current || !questionsRef.current) return;
+
     setIsSubmitting(true);
-    const applicationIsValid = await applicationFormRef.current?.validate();
-    const questionsIsValid = await questionsRef.current?.validate();
+    const applicationIsValid = await applicationFormRef.current.validate();
+    const questionsIsValid = await questionsRef.current.validate();
 
     if (applicationIsValid && questionsIsValid) {
-      const resp = await applicationFormRef.current?.submit();
+      const resp = await applicationFormRef.current.submit();
       if (resp?.data) {
-        await Promise.all(questionsRef.current?.submit(resp.data.id)!);
+        await Promise.all(questionsRef.current.submit((resp.data as ApplicationRecord).id));
         toggleModal();
       }
     }
@@ -365,6 +367,7 @@ export default function () {
                     handlerRole: true,
                     channel: true,
                     roles: true,
+                    removeRoles: true,
                     questions: {
                       edges: {
                         node: {

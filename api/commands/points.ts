@@ -28,7 +28,13 @@ export default {
 
   execute: async (interaction: APIChatInputApplicationCommandInteraction) => {
     const options = interaction.data.options as
-      | [{ name: "user"; type: ApplicationCommandOptionType.User; value: string }]
+      | [
+          {
+            name: "user";
+            type: ApplicationCommandOptionType.User;
+            value: string;
+          },
+        ]
       | undefined;
 
     const userId = options?.[0]?.value ?? interaction.member!.user.id;
@@ -47,7 +53,10 @@ export default {
         embeds: [
           new EmbedBuilder()
             .setColor(MM_COLOUR)
-            .setAuthor({ name: "Points Breakdown", iconURL: "https://i.imgur.com/LI0agMJ.png" })
+            .setAuthor({
+              name: "Points Breakdown",
+              iconURL: "https://i.imgur.com/LI0agMJ.png",
+            })
             .setDescription(
               `${options ? `<@${userId}> has` : "You have"} ${record.points} point${
                 Math.abs(record.points) == 1 ? "" : "s"

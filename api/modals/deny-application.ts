@@ -1,5 +1,5 @@
 import {
-  APIModalSubmitInteraction,
+  APIModalSubmitGuildInteraction,
   APIModalSubmitTextInputComponent,
   InteractionResponseType,
   MessageFlags,
@@ -7,12 +7,14 @@ import {
 import { api } from "gadget-server";
 import { deleteParentMessage, getAvatarURL } from "../utils";
 
-export default async (interaction: APIModalSubmitInteraction) => {
+export default async (interaction: APIModalSubmitGuildInteraction) => {
   const [
     {
       component: { value: reason },
     },
-  ] = interaction.data.components as { component: APIModalSubmitTextInputComponent }[];
+  ] = interaction.data.components as {
+    component: APIModalSubmitTextInputComponent;
+  }[];
 
   const {
     id: recordId,

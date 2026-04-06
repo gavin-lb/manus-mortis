@@ -43,7 +43,9 @@ export function RoleMultiselector({ roles, onSelectionChange, ...props }: Props)
       <InlineStack gap="050">
         Roles:
         {selected.map((role) => (
-          <Tag onRemove={() => updateSelected(role.id)}>{role.name}</Tag>
+          <Tag key={`role ${role.id}`} onRemove={() => updateSelected(role.id)}>
+            {role.name}
+          </Tag>
         ))}
       </InlineStack>
     ) : null;

@@ -3,16 +3,13 @@ import type { AuthOutletContext } from "./_user";
 import { Card, Divider, EmptyState, Page, Text } from "@shopify/polaris";
 import darkLogoUrl from "@/images/mm-logo-dark.png";
 import lightLogoUrl from "@/images/mm-logo-light.png";
-import { ExitIcon } from '@shopify/polaris-icons';
+import { ExitIcon } from "@shopify/polaris-icons";
 
 export default function () {
   const { user, theme } = useOutletContext<AuthOutletContext>();
 
   return user ? (
-    <Page 
-      title="Home"
-      subtitle="Web Portal landing page"
-    >
+    <Page title="Home" subtitle="Web Portal landing page">
       <Card padding="500">
         <EmptyState
           image={theme == "light" ? lightLogoUrl : darkLogoUrl}
@@ -21,7 +18,8 @@ export default function () {
         >
           <Divider />
           <Text variant="bodyMd" as="p">
-            From here you can manage the Manus Mortis Discord Bot, configure its settings, and monitor its activity.
+            From here you can manage the Manus Mortis Discord Bot, configure its settings, and
+            monitor its activity.
           </Text>
         </EmptyState>
       </Card>
