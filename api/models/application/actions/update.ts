@@ -75,7 +75,7 @@ export const run: ActionRun = async ({ params, record, logger, api, connections 
           {
             [TextInputStyle.Short]: DiscordTextInputStyle.Short,
             [TextInputStyle.Paragraph]: DiscordTextInputStyle.Paragraph,
-          }[question.textInputStyle],
+          }[question.textInputStyle!],
         );
         if (question.placeholder) {
           component.setPlaceholder(question.placeholder);
