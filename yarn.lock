@@ -4289,6 +4289,11 @@ get-symbol-description@^1.1.0:
     es-errors "^1.3.0"
     get-intrinsic "^1.2.6"
 
+ggt@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/ggt/-/ggt-3.0.0.tgz#0e904627b29f359dc951ec2c6846c05796eceac8"
+  integrity sha512-W3Eck7zjZOci2FljaKrEI1GQ0z3QZy1wXBinug/YCGoMtUXsTcUIgnkZB9nD2XAZoFVFtitgdRdF+R76jYlN3w==
+
 github-slugger@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/github-slugger/-/github-slugger-2.0.0.tgz#52cf2f9279a21eb6c59dd385b410f0c0adda8f1a"
