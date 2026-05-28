@@ -19,9 +19,9 @@ export const params = {
 };
 
 export const run: ActionRun = async ({ params, record, session }) => {
-  if (params.state !== session?.get("oauthState")) {
+  if (params.state !== session?.get("csrfToken")) {
     logger.error(
-      { expected: session?.get("oauthState"), received: params.state },
+      { expected: session?.get("csrfToken"), received: params.state },
       "Invalid OAuth state",
     );
     throw INVALID_OAUTH_STATE_ERROR;

@@ -7,9 +7,7 @@ const URL = encodeURI(
 
 export const loader = async ({ context: { session } }: LoaderFunctionArgs) => {
   if (session) {
-    const oauthState = crypto.randomUUID();
-    session.set("oauthState", oauthState);
-    return redirect(URL + encodeURI(`&state=${oauthState}`));
+    return redirect(URL + `&state=${encodeURIComponent(session.get("csrfToken"))}`);
   } else {
     return redirect("/sign-in");
   }

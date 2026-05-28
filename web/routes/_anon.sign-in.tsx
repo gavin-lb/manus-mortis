@@ -16,10 +16,9 @@ const ERROR_MESSAGES = {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const code = new URL(request.url).searchParams.get("code");
-  const state = new URL(request.url).searchParams.get("state");
+  const { searchParams } = new URL(request.url);
 
-  return { code, state };
+  return { code: searchParams.get("code"), state: searchParams.get("state") };
 };
 
 export default function () {
