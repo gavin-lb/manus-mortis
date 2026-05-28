@@ -7,7 +7,7 @@
   "scripts": {
     "build": "NODE_ENV=production remix vite:build",
     "lint": "eslint --ext ts,tsx .",
-    "format": "prettier --write .", 
+    "format": "prettier --write .",
     "dev": "ggt dev ./manus-mortis --app=manus-mortis --env=development"
   },
   "prettier": {

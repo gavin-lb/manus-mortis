@@ -9,10 +9,9 @@ The Discord bot runs on a backend API written in TypeScript running Node on a se
 - Bespoke ticketing and application system:
   - Users can open generic tickets or applications via a modal. They can edit/close their ticket or withdraw their application via a smart context menu button. The bot creates a private thread in the relevant channel, adds the appropriate users and information, and creates an associated database entry on the backend:
 
-  |                       Ticket                       |                          Application                         |
+  |                       Ticket                       |                         Application                          |
   | :------------------------------------------------: | :----------------------------------------------------------: |
   | ![ticket demo](docs/assets/discord-bot/ticket.gif) | ![application demo](docs/assets/discord-bot/application.gif) |
-
   - Handlers can resolve a ticket or accept/deny an application via the same smart context menu button. The bot automatically handles assigning/removing relevant roles, informing the user, and locking/closing the ticket thread:
 
   |                                Accept                                 |                               Deny                                |
@@ -34,7 +33,7 @@ The Discord bot runs on a backend API written in TypeScript running Node on a se
   - System for posting a call-to-action bounty for users to react to a post for the purpose of increasing visibility on recruitment posts,
   - Works cross-server without the need for the bot to be a member of the other server by implementing as a user app command (user adds the bot as an app on their account),
 
-  |                           Post                          |                           Claim                           |
+  |                          Post                           |                           Claim                           |
   | :-----------------------------------------------------: | :-------------------------------------------------------: |
   | ![bounty post](docs/assets/discord-bot/bounty-post.gif) | ![bounty claim](docs/assets/discord-bot/bounty-claim.gif) |
 
