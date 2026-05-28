@@ -14,7 +14,6 @@ export const schema: GadgetModel = {
       includeTime: true,
       storageKey: "PuuLJLQ1ib2U",
     },
-    oauthState: { type: "string", storageKey: "UA8INVEI2SUg" },
     refreshToken: { type: "string", storageKey: "3dSwJ-CU-y47" },
     user: {
       type: "belongsTo",
