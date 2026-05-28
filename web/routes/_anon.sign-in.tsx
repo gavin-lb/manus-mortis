@@ -12,19 +12,21 @@ import { useEffect } from "react";
 const ERROR_MESSAGES = {
   GGT_RECORD_NOT_FOUND: "You do not have access to the Manus Mortis Web Portal",
   ERR_BAD_REQUEST: "Invalid login code - please try connecting with Discord again",
+  INVALID_OAUTH_STATE: "Invalid OAuth state - login attempt was tampered with",
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const code = new URL(request.url).searchParams.get("code");
+  const state = new URL(request.url).searchParams.get("state");
 
-  return { code };
+  return { code, state };
 };
 
 export default function () {
   const { theme } = useOutletContext<RootOutletContext>();
   const navigate = useNavigate();
   const { gadgetConfig } = useOutletContext<RootOutletContext>();
-  const { code } = useLoaderData<typeof loader>();
+  const { code, state } = useLoaderData<typeof loader>();
   const [{ data, error, fetching }, signIn] = useAction(api.session.signIn);
 
   let errorMessage = error?.message;
@@ -37,7 +39,7 @@ export default function () {
 
   useEffect(() => {
     if (!!code && !fetching && !data && !error) {
-      signIn({ code });
+      signIn({ code, state });
     }
 
     if (data?.userId) {

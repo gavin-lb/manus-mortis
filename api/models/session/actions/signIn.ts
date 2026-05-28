@@ -1,14 +1,32 @@
 import axios from "axios";
-import { ActionOptions, api } from "gadget-server";
+import { ActionOptions, api, logger } from "gadget-server";
 import { getAvatarURL } from "/gadget/app/api/utils";
 
 const URL = "https://discord.com/api/v10/oauth2/";
 
+interface OauthStateError extends Error {
+  code: string;
+  status: number;
+}
+
+const INVALID_OAUTH_STATE_ERROR = new Error("Invalid OAuth state") as OauthStateError;
+INVALID_OAUTH_STATE_ERROR.code = "INVALID_OAUTH_STATE";
+INVALID_OAUTH_STATE_ERROR.status = 400;
+
 export const params = {
   code: { type: "string" },
+  state: { type: "string" },
 };
 
 export const run: ActionRun = async ({ params, record, session }) => {
+  if (params.state !== session?.get("oauthState")) {
+    logger.error(
+      { expected: session?.get("oauthState"), received: params.state },
+      "Invalid OAuth state",
+    );
+    throw INVALID_OAUTH_STATE_ERROR;
+  }
+
   const resp = await axios.post(
     URL + "token",
     new URLSearchParams({
