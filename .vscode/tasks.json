@@ -1,0 +1,36 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Open Workspace",
+      "dependsOn": ["ggt", "terminal"],
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    },
+    {
+      "label": "ggt",
+      "type": "shell",
+      "command": "ggt dev ./manus-mortis --app=manus-mortis --env=development",
+      "isBackground": true,
+      "presentation": {
+        "group": "workspace",
+        "panel": "dedicated",
+        "echo": false
+      }
+    },
+    {
+      "label": "terminal",
+      "type": "process",
+      "command": "${env:SHELL}",
+      "hide": true,
+      "isBackground": true,
+      "presentation": {
+        "group": "workspace",
+        "panel": "dedicated",
+        "echo": false,
+        "focus": true
+      }
+    }
+  ]
+}
