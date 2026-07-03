@@ -11,7 +11,7 @@
     {
       "label": "ggt",
       "type": "shell",
-      "command": "ggt dev ./manus-mortis --app=manus-mortis --env=development",
+      "command": "ggt dev . --app=manus-mortis --env=development",
       "isBackground": true,
       "presentation": {
         "group": "workspace",
