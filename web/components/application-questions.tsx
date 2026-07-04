@@ -131,7 +131,6 @@ export const ApplicationQuestions = forwardRef<QuestionsRef, QuestionsProps>(
                     icon={PlusIcon}
                     onClick={addQuestion}
                     tone={isError ? "critical" : undefined}
-                    disabled={questions.length >= 5}
                   >
                     Add question
                   </Button>
