@@ -53,7 +53,7 @@ export async function discordRequest(
     headers: {
       Authorization: `Bot ${process.env.DISCORD_TOKEN}`,
       "Content-Type": "application/json; charset=UTF-8",
-      "User-Agent": "Manus Mortis Bot",
+      "User-Agent": "Manus Mortis Bot" + (process.env.NODE_ENV == "development" ? "/development" : ""),
     },
     method: options.method,
     body: JSON.stringify(options.body),
