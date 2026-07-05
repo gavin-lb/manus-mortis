@@ -5,11 +5,13 @@
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
-    "build": "yarn lint && yarn typecheck && NODE_ENV=production remix vite:build",
+    "build": "yarn validate && NODE_ENV=production remix vite:build",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
-    "dev": "ggt dev"
+    "format:check": "prettier --check .",
+    "dev": "ggt dev",
+    "validate": "yarn lint && yarn typecheck && yarn format:check"
   },
   "prettier": {
     "semi": true,
