@@ -28,6 +28,7 @@ const route: RouteHandler = async ({ request, reply, logger }) => {
 };
 
 async function handleInteraction(interaction: APIInteraction) {
+  let name, args;
   switch (interaction.type) {
     case InteractionType.Ping:
       return { type: InteractionResponseType.Pong };
@@ -39,13 +40,12 @@ async function handleInteraction(interaction: APIInteraction) {
       return await command.execute(interaction);
 
     case InteractionType.MessageComponent:
-      const { default: component } = require(
-        `/gadget/app/api/components/${toKebabCase(interaction.data.custom_id)}`,
-      );
-      return await component(interaction);
+      [name, ...args] = interaction.data.custom_id.split(" ");
+      const { default: component } = require(`/gadget/app/api/components/${toKebabCase(name)}`);
+      return await component(interaction, ...args);
 
     case InteractionType.ModalSubmit:
-      const [name, ...args] = interaction.data.custom_id.split(" ");
+      [name, ...args] = interaction.data.custom_id.split(" ");
       const { default: modal } = require(`/gadget/app/api/modals/${toKebabCase(name)}`);
       return await modal(interaction, ...args);
 
