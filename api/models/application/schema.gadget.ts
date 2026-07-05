@@ -33,7 +33,12 @@ export const schema: GadgetModel = {
       filterIndex: false,
       searchIndex: false,
     },
-    modal: { type: "json", storageKey: "dFk9HZdfObQK" },
+    modalPages: {
+      type: "json",
+      default: [],
+      validations: { required: true },
+      storageKey: "dFk9HZdfObQK",
+    },
     numQuestions: {
       type: "computed",
       sourceFile: "api/models/application/numQuestions.gelly",
