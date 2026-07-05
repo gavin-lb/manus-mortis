@@ -29,27 +29,30 @@ export const run: ActionRun = async ({ params, record, api }) => {
     removeRole(process.env.SERVER_ID!, record.ownerId, roleId),
   );
 
-  await sendMessage(record.threadId, {
-    content: `<@${record.ownerId}>`,
-    embeds: [
-      new EmbedBuilder()
-        .setColor(MM_COLOUR)
-        .setTitle(`** ${MM_EMOJI} Application Accepted ${MM_EMOJI}**`)
-        .setDescription("Congratulations, your application to Manus Mortis has been accepted!")
-        .setFooter({
-          text: `Handled by @${params.name}`,
-          iconURL: params.avatar,
-        })
-        .setTimestamp()
-        .toJSON(),
-    ],
-  });
+  if (record.threadId) {
+    await sendMessage(record.threadId, {
+      content: `<@${record.ownerId}>`,
+      embeds: [
+        new EmbedBuilder()
+          .setColor(MM_COLOUR)
+          .setTitle(`** ${MM_EMOJI} Application Accepted ${MM_EMOJI}**`)
+          .setDescription("Congratulations, your application to Manus Mortis has been accepted!")
+          .setFooter({
+            text: `Handled by @${params.name}`,
+            iconURL: params.avatar,
+          })
+          .setTimestamp()
+          .toJSON(),
+      ],
+    });
 
-  editChannel(record.threadId, {
-    name: `✅Accepted[@${record.ownerName}] ${applicationRecord.title}`,
-    archived: true,
-    locked: true,
-  });
+    editChannel(record.threadId, {
+      name: `✅Accepted[@${record.ownerName}] ${applicationRecord.title}`,
+      archived: true,
+      locked: true,
+    });
+  }
+
   await save(record);
 };
 

@@ -53,7 +53,8 @@ export async function discordRequest(
     headers: {
       Authorization: `Bot ${process.env.DISCORD_TOKEN}`,
       "Content-Type": "application/json; charset=UTF-8",
-      "User-Agent": "Manus Mortis Bot",
+      "User-Agent":
+        "Manus Mortis Bot" + (process.env.NODE_ENV == "development" ? "/development" : ""),
     },
     method: options.method,
     body: JSON.stringify(options.body),
@@ -100,7 +101,7 @@ export async function editMessage(
 export async function deleteMessage(channelId: string, messageId: string) {
   return (await discordRequest(`/channels/${channelId}/messages/${messageId}`, {
     method: "DELETE",
-  })) as RESTDeleteAPIChannelMessageResult;
+  })) as RESTDeleteAPIChannelMessageResult | null;
 }
 
 export async function createThread(channelId: string, body: RESTPostAPIChannelThreadsJSONBody) {
@@ -120,13 +121,13 @@ export async function editChannel(channelId: string, body: RESTPatchAPIChannelJS
 export async function addRole(guildId: string, userId: string, roleId: string) {
   return (await discordRequest(`/guilds/${guildId}/members/${userId}/roles/${roleId}`, {
     method: "PUT",
-  })) as RESTPutAPIGuildMemberRoleResult;
+  })) as unknown as RESTPutAPIGuildMemberRoleResult;
 }
 
 export async function removeRole(guildId: string, userId: string, roleId: string) {
   return (await discordRequest(`/guilds/${guildId}/members/${userId}/roles/${roleId}`, {
     method: "DELETE",
-  })) as RESTDeleteAPIGuildMemberRoleResult;
+  })) as RESTDeleteAPIGuildMemberRoleResult | null;
 }
 
 export function getAvatarURL(user: APIUser) {
@@ -139,7 +140,7 @@ export async function deleteParentMessage(interactionToken: Interaction["token"]
     {
       method: "DELETE",
     },
-  )) as RESTDeleteAPIWebhookWithTokenMessageResult;
+  )) as RESTDeleteAPIWebhookWithTokenMessageResult | null;
 }
 
 export async function getGuild(guildId: string) {

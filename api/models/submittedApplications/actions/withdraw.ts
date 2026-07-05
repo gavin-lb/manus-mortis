@@ -12,12 +12,13 @@ export const run: ActionRun = async ({ params, record, logger, api, connections 
 
   record.status = "withdrawn";
 
-  editChannel(record.threadId, {
-    name: `❌Withdrawn[@${record.ownerName}] ${applicationRecord.title}`,
-    archived: true,
-    locked: true,
-  });
-
+  if (record.threadId) {
+    editChannel(record.threadId, {
+      name: `❌Withdrawn[@${record.ownerName}] ${applicationRecord.title}`,
+      archived: true,
+      locked: true,
+    });
+  }
   await save(record);
 };
 

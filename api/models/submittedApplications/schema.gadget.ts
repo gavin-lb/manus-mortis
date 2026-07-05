@@ -13,13 +13,10 @@ export const schema: GadgetModel = {
       parent: { model: "application" },
       storageKey: "ColVNubc6pHu-BelongsTo-User",
     },
-    channelId: {
-      type: "string",
-      validations: { required: true },
-      storageKey: "pmbUzEQfKEOy",
-    },
+    channelId: { type: "string", storageKey: "pmbUzEQfKEOy" },
     data: {
       type: "json",
+      default: { components: [], resolved: [] },
       validations: { required: true },
       storageKey: "QI_nn9FOxwcf",
     },
@@ -37,19 +34,16 @@ export const schema: GadgetModel = {
     roles: { type: "json", storageKey: "wryN1lXYjTyt" },
     status: {
       type: "enum",
-      default: "open",
+      default: "partial",
       acceptMultipleSelections: false,
       acceptUnlistedOptions: false,
-      options: ["open", "accepted", "denied", "withdrawn"],
+      options: ["open", "accepted", "denied", "withdrawn", "partial"],
       validations: { required: true },
       storageKey: "WBmTwSnNR2IO",
     },
     threadId: {
       type: "string",
-      validations: {
-        required: true,
-        unique: { scopeByField: "channelId" },
-      },
+      validations: { unique: { scopeByField: "channelId" } },
       storageKey: "Uudm4hC5sVod",
     },
   },
