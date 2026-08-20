@@ -30,6 +30,10 @@
   margin-right: 1rem;
 }
 
+.dark .Polaris-IndexTable__StickyTableHeader--isSticky {
+  background-color: var(--p-color-bg-surface-hover) !important;
+}
+
 .dark .Polaris-Navigation__ItemInnerWrapper:hover {
   background-color: var(--p-color-bg-surface-hover) !important;
 }
@@ -81,6 +85,7 @@
 .dark .Polaris-IndexTable__LoadingPanelRow {
   background-color: var(--p-color-bg-surface) !important;
 }
+
 .dark .Polaris-Listbox-TextOption.Polaris-Listbox-TextOption--selected {
   background-color: var(--p-color-bg-inverse) !important;
 }
@@ -233,6 +238,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
