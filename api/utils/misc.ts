@@ -86,7 +86,6 @@ export function toOrdinal(number: number): string {
   return `${str}th`;
 }
 
-
 /**
  * Escapes a string for use in a CSV file (replacing newlines with escaped commas separated).
  * @param  {String} value    The input string.

@@ -64,12 +64,10 @@ export const run: ActionRun = async ({ params, record, api, logger }) => {
     components.map(async ({ component }, index) => {
       const answer = component as ModalSubmitComponent;
       const question = questionMap[component.custom_id];
-      const questionTitle = `Q${index + 1}. ${question.title}`
+      const questionTitle = `Q${index + 1}. ${question.title}`;
       const container = new ContainerBuilder()
         .setAccentColor(MM_COLOUR)
-        .addTextDisplayComponents(
-          new TextDisplayBuilder().setContent(`### ${questionTitle}`),
-        )
+        .addTextDisplayComponents(new TextDisplayBuilder().setContent(`### ${questionTitle}`))
         .addSeparatorComponents(
           new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
         );
@@ -80,11 +78,7 @@ export const run: ActionRun = async ({ params, record, api, logger }) => {
         case ComponentType.TextInput:
           answerString = answer.value && answer.value.length > 0 ? answer.value : NO_RESPONSE;
 
-          container.addTextDisplayComponents(
-            new TextDisplayBuilder().setContent(
-              answerString
-            ),
-          );
+          container.addTextDisplayComponents(new TextDisplayBuilder().setContent(answerString));
           break;
 
         case ComponentType.StringSelect: {
@@ -97,10 +91,7 @@ export const run: ActionRun = async ({ params, record, api, logger }) => {
             })
             .join("\n");
 
-          container.addTextDisplayComponents(
-            new TextDisplayBuilder().setContent(
-              answerString
-            ));
+          container.addTextDisplayComponents(new TextDisplayBuilder().setContent(answerString));
           break;
         }
 
@@ -126,31 +117,28 @@ export const run: ActionRun = async ({ params, record, api, logger }) => {
           break;
 
         case ComponentType.UserSelect:
-          answerString = answer.values.length > 0
-            ? (
-              await Promise.all(
-                answer.values.map(async (id) => {
-                  if (id === record.ownerId) return "Nice try, but you cannot refer yourself";
+          answerString =
+            answer.values.length > 0
+              ? (
+                  await Promise.all(
+                    answer.values.map(async (id) => {
+                      if (id === record.ownerId) return "Nice try, but you cannot refer yourself";
 
-                  const pointRecord = await api.internal.point.upsert({
-                    userId: id,
-                    _atomics: {
-                      referralCount: { increment: 1 },
-                    },
-                    on: ["userId"],
-                  });
-                  api.point.computePoints(pointRecord.id);
-                  return `<@${id}>`;
-                }),
-              )
-            ).join(", ")
-            : NO_RESPONSE;
+                      const pointRecord = await api.internal.point.upsert({
+                        userId: id,
+                        _atomics: {
+                          referralCount: { increment: 1 },
+                        },
+                        on: ["userId"],
+                      });
+                      api.point.computePoints(pointRecord.id);
+                      return `<@${id}>`;
+                    }),
+                  )
+                ).join(", ")
+              : NO_RESPONSE;
 
-          container.addTextDisplayComponents(
-            new TextDisplayBuilder().setContent(
-              answerString,
-            ),
-          );
+          container.addTextDisplayComponents(new TextDisplayBuilder().setContent(answerString));
           break;
 
         default:

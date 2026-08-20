@@ -2,13 +2,7 @@ import { api } from "@/api";
 import { AutoTable } from "@gadgetinc/react/auto/polaris";
 import { LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import {
-  BlockStack,
-  Button,
-  Card,
-  InlineStack,
-  Page
-} from "@shopify/polaris";
+import { BlockStack, Button, Card, InlineStack, Page } from "@shopify/polaris";
 import { FolderDownIcon } from "@shopify/polaris-icons";
 import { useState } from "react";
 
@@ -18,7 +12,7 @@ const COLUMN_ROW = [
   "ownerName",
   "threadId",
   "status",
-  "answers"
+  "answers",
 ] as const;
 
 export const loader = (async ({ context }) => {
@@ -42,7 +36,7 @@ export default function () {
         threadId: true,
         status: true,
         answers: true,
-        application: { title: true }
+        application: { title: true },
       },
     });
 
@@ -52,7 +46,10 @@ export default function () {
       allRecords.push(...records);
     }
 
-    const data = allRecords.map(({ application, ...rest }) => ({ ...rest, application: application?.title }));
+    const data = allRecords.map(({ application, ...rest }) => ({
+      ...rest,
+      application: application?.title,
+    }));
     const rows = [
       [...COLUMN_ROW],
       ...data.map((record) => COLUMN_ROW.map((column) => record[column] ?? 0)),
@@ -79,14 +76,7 @@ export default function () {
             live
             model={api.submittedApplications}
             selectable={false}
-            columns={[
-              "application.title",
-              "ownerId",
-              "ownerName",
-              "threadId",
-              "status",
-              "answers"
-            ]}
+            columns={["application.title", "ownerId", "ownerName", "threadId", "status", "answers"]}
           ></AutoTable>
           <InlineStack align="end">
             <Button icon={FolderDownIcon} onClick={handleExport} loading={exporting}>
