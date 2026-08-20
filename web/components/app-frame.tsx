@@ -10,6 +10,7 @@ import {
   EmailIcon,
   ExitIcon,
   HomeIcon,
+  ListNumberedIcon,
   MoneyIcon,
   PersonIcon,
 } from "@shopify/polaris-icons";
@@ -94,6 +95,11 @@ const AppFrame = ({ children, user, theme }: Props) => {
       label: "Tickets & Applications",
       url: "/tickets-applications",
       icon: ContractIcon,
+    },
+    {
+      label: "Submitted Applications",
+      url: "/submitted-applications",
+      icon: ListNumberedIcon,
     },
     { label: "Points", url: "/points", icon: MoneyIcon },
     {
