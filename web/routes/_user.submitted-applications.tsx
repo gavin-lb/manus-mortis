@@ -140,7 +140,7 @@ export default function () {
             live
             model={api.submittedApplications}
             selectable={false}
-            pageSize={20}
+            pageSize={10}
             columns={[
               "application.title",
               { header: "User", render: UserColumn },
