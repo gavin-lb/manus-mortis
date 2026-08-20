@@ -86,8 +86,11 @@ export default function () {
   }: {
     record: SubmittedApplicationsRecord;
   }) => {
-    const user = memberMap[ownerId].user;
+    const user = memberMap[ownerId]?.user;
 
+    if (!user) {
+      return <Text as="p">Unknown User (id: {ownerId})</Text>;
+    }
     return (
       <ResourceItem
         id={user.id}
