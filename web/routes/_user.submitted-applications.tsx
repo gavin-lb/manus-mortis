@@ -13,6 +13,7 @@ import { FolderDownIcon } from "@shopify/polaris-icons";
 import { useState } from "react";
 
 const COLUMN_ROW = [
+  "application",
   "ownerId",
   "ownerName",
   "threadId",
@@ -40,7 +41,8 @@ export default function () {
         ownerName: true,
         threadId: true,
         status: true,
-        answers: true
+        answers: true,
+        application: { title: true }
       },
     });
 
@@ -50,9 +52,10 @@ export default function () {
       allRecords.push(...records);
     }
 
+    const data = allRecords.map(({ application, ...rest }) => ({ ...rest, application: application?.title }));
     const rows = [
       [...COLUMN_ROW],
-      ...allRecords.map((record) => COLUMN_ROW.map((column) => record[column] ?? 0)),
+      ...data.map((record) => COLUMN_ROW.map((column) => record[column] ?? 0)),
     ];
 
     const csv = rows.map((row) => row.join(",")).join("\n");
@@ -77,6 +80,7 @@ export default function () {
             model={api.submittedApplications}
             selectable={false}
             columns={[
+              "application.title",
               "ownerId",
               "ownerName",
               "threadId",
