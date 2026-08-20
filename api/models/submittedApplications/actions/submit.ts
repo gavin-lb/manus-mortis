@@ -1,5 +1,6 @@
 import {
   ActionRowBuilder,
+  APIInteractionDataResolved,
   APIModalSubmission,
   ButtonBuilder,
   ButtonStyle,
@@ -117,28 +118,35 @@ export const run: ActionRun = async ({ params, record, api, logger }) => {
           break;
 
         case ComponentType.UserSelect:
-          answerString =
-            answer.values.length > 0
-              ? (
-                  await Promise.all(
-                    answer.values.map(async (id) => {
-                      if (id === record.ownerId) return "Nice try, but you cannot refer yourself";
+          answerString = answer.values
+            ? (answer.values as Array<string>)
+                .map((id) => (data.resolved as APIInteractionDataResolved).users![id].username)
+                .join(", ")
+            : NO_RESPONSE;
 
-                      const pointRecord = await api.internal.point.upsert({
-                        userId: id,
-                        _atomics: {
-                          referralCount: { increment: 1 },
-                        },
-                        on: ["userId"],
-                      });
-                      api.point.computePoints(pointRecord.id);
-                      return `<@${id}>`;
-                    }),
-                  )
-                ).join(", ")
-              : NO_RESPONSE;
+          container.addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(
+              answer.values.length > 0
+                ? (
+                    await Promise.all(
+                      answer.values.map(async (id) => {
+                        if (id === record.ownerId) return "Nice try, but you cannot refer yourself";
 
-          container.addTextDisplayComponents(new TextDisplayBuilder().setContent(answerString));
+                        const pointRecord = await api.internal.point.upsert({
+                          userId: id,
+                          _atomics: {
+                            referralCount: { increment: 1 },
+                          },
+                          on: ["userId"],
+                        });
+                        api.point.computePoints(pointRecord.id);
+                        return `<@${id}>`;
+                      }),
+                    )
+                  ).join(", ")
+                : NO_RESPONSE,
+            ),
+          );
           break;
 
         default:
