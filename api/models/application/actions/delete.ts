@@ -12,8 +12,16 @@ export const run: ActionRun = async ({ params, record, api }) => {
     },
   });
 
+  api.internal.submittedApplications.deleteMany({
+    filter: {
+      applicationId: {
+        equals: record.id,
+      },
+    },
+  });
+
   await deleteRecord(record);
-  api.guild.editpost(record.guildId);
+  await api.guild.editpost(record.guildId);
 };
 
 export const options: ActionOptions = {
