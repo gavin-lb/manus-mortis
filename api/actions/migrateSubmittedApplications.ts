@@ -45,7 +45,7 @@ function convertDataToAnswers(
     }
 
     return escapeCsvField(
-      `Q${index + 1}. ${question.title}: ${component.component.value ?? (component.component.values as Array<String>).join(", ") ?? "No response given"}`
+      `Q${index + 1}. ${question.title}: ${component.component.value ?? (component.component.values as Array<string>).join(", ") ?? "No response given"}`
     );
   }).join(", ");
 }
