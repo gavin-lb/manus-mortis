@@ -69,15 +69,17 @@ function convertDataToAnswers(
           break;
 
         case ComponentType.UserSelect:
-          answer = (component.component.values as Array<string>)
-            .map((id) => (data.resolved as APIInteractionDataResolved).users![id].username)
-            .join(", ") ?? NO_RESPONSE;
+          answer =
+            (component.component.values as Array<string>)
+              .map((id) => (data.resolved as APIInteractionDataResolved).users![id].username)
+              .join(", ") ?? NO_RESPONSE;
           break;
 
         case ComponentType.FileUpload:
-          answer = (component.component.values as Array<string>)
-            .map((id) => (data.resolved as APIInteractionDataResolved).attachments![id].url)
-            .join(", ") ?? NO_RESPONSE;
+          answer =
+            (component.component.values as Array<string>)
+              .map((id) => (data.resolved as APIInteractionDataResolved).attachments![id].url)
+              .join(", ") ?? NO_RESPONSE;
           break;
 
         default:
