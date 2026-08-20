@@ -88,12 +88,14 @@ export function toOrdinal(number: number): string {
 
 
 /**
- * Escapes a string for use in a CSV file.
- * @param  {String}    value    The input string.
- * @return {String}             The escaped string.
+ * Escapes a string for use in a CSV file (replacing newlines with escaped commas separated).
+ * @param  {String} value    The input string.
+ * @return {String}          The escaped string.
  */
 export function escapeCsvField(value: string): string {
-  if (/[",\n\r]/.test(value)) {
+  value = value.replace(/\r?\n/g, ", ");
+
+  if (/[",\r]/.test(value)) {
     return `"${value.replace(/"/g, '""')}"`;
   }
 
