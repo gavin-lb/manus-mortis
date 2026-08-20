@@ -11,16 +11,13 @@ export const run: ActionRun = async ({ api }) => {
     first: 50,
     select: {
       id: true,
-      applicationId: true
+      applicationId: true,
     },
   });
 
   do {
     const toDelete = records
-      .filter(
-        ({ applicationId }) =>
-          !applicationId || !applicationIds.has(applicationId),
-      )
+      .filter(({ applicationId }) => !applicationId || !applicationIds.has(applicationId))
       .map(({ id }) => id);
 
     if (toDelete.length > 0) {
