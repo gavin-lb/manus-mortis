@@ -82,32 +82,33 @@ export default function () {
   };
 
   const UserColumn = ({
-    record: { ownerId, threadId },
+    record: { ownerId, ownerName },
   }: {
     record: SubmittedApplicationsRecord;
   }) => {
     const user = memberMap[ownerId]?.user;
 
-    if (!user) {
-      return <Text as="p">Unknown User (id: {ownerId})</Text>;
-    }
     return (
       <ResourceItem
-        id={user.id}
+        id={user?.id ?? ownerId}
         media={
           <Avatar
-            source={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`}
+            source={
+              user?.avatar
+                ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+                : undefined
+            }
             size="lg"
-            name={user.username ?? undefined}
+            name={user?.username ?? ownerName ?? undefined}
           />
         }
-        url={`https://discord.com/channels/${serverId}/${threadId}`}
+        onClick={() => { }}
       >
         <BlockStack>
           <Text variant="bodyMd" fontWeight="bold" as="h3">
-            {user.global_name ?? user.username}
+            {user?.global_name ?? user?.username ?? ownerName}
           </Text>
-          <div>{user.global_name && `(${user.username})`}</div>
+          <div>{user?.global_name && `(${user.username})`}</div>
         </BlockStack>
       </ResourceItem>
     );
