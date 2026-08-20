@@ -85,3 +85,17 @@ export function toOrdinal(number: number): string {
   }
   return `${str}th`;
 }
+
+
+/**
+ * Escapes a string for use in a CSV file.
+ * @param  {String}    value    The input string.
+ * @return {String}             The escaped string.
+ */
+export function escapeCsvField(value: string): string {
+  if (/[",\n\r]/.test(value)) {
+    return `"${value.replace(/"/g, '""')}"`;
+  }
+
+  return value;
+}
