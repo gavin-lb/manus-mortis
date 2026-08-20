@@ -12,6 +12,7 @@ import {
   Link,
   Page,
   ResourceItem,
+  Select,
   Tag,
   Text,
 } from "@shopify/polaris";
@@ -41,6 +42,7 @@ export const loader = (async ({ context }) => {
 export default function () {
   const { members, serverId } = useLoaderData<typeof loader>();
   const [exporting, setExporting] = useState(false);
+  const [pageSize, setPageSize] = useState<number>(10);
 
   const memberMap = Object.fromEntries(members.map((member) => [member.user.id, member]));
 
@@ -142,7 +144,7 @@ export default function () {
             live
             model={api.submittedApplications}
             selectable={false}
-            pageSize={10}
+            pageSize={pageSize}
             columns={[
               "createdAt",
               "application.title",
@@ -153,6 +155,13 @@ export default function () {
             ]}
             initialSort={{ createdAt: "Descending" }}
           ></AutoTable>
+          <Select
+            label="Page size"
+            labelInline
+            value={String(pageSize)}
+            onChange={(size) => setPageSize(Number(size))}
+            options={["10", "15", "20", "25", "50", "100"]}
+          />
           <InlineStack align="end">
             <Button icon={FolderDownIcon} onClick={handleExport} loading={exporting}>
               Export
