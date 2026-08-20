@@ -68,13 +68,14 @@ export const run: ActionRun = async ({ api }) => {
     select: {
       id: true,
       data: true,
+      answers: true
     },
   });
   do {
     await api.submittedApplications.bulkUpdate(
-      applications.map(({ id, data }) => ({
+      applications.map(({ id, data, answers }) => ({
         id,
-        answers: convertDataToAnswers(data, questionsMap),
+        answers: answers ?? convertDataToAnswers(data, questionsMap),
       })),
     );
 
