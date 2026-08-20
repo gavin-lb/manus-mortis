@@ -18,11 +18,11 @@ import {
 import { ActionOptions, applyParams, save } from "gadget-server";
 import { preventCrossUserDataAccess } from "gadget-server/auth";
 import { StringSelectOption } from "../../../types";
-import { createThread, MM_COLOUR, sendMessage } from "/gadget/app/api/utils";
+import { createThread, escapeCsvField, MM_COLOUR, sendMessage } from "/gadget/app/api/utils";
 
 const NO_RESPONSE = "No response given";
 
-export const run: ActionRun = async ({ params, record, api }) => {
+export const run: ActionRun = async ({ params, record, api, logger }) => {
   await preventCrossUserDataAccess(params, record);
   applyParams(params, record);
 
@@ -58,42 +58,49 @@ export const run: ActionRun = async ({ params, record, api }) => {
 
   const data = record.data as unknown as APIModalSubmission;
   const components = data.components as ModalSubmitLabelComponent[];
+  let answersString = "";
 
   const answers = await Promise.all(
     components.map(async ({ component }, index) => {
       const answer = component as ModalSubmitComponent;
       const question = questionMap[component.custom_id];
+      const questionTitle = `Q${index + 1}. ${question.title}`
       const container = new ContainerBuilder()
         .setAccentColor(MM_COLOUR)
         .addTextDisplayComponents(
-          new TextDisplayBuilder().setContent(`### Q${index + 1}. ${question.title}`),
+          new TextDisplayBuilder().setContent(`### ${questionTitle}`),
         )
         .addSeparatorComponents(
           new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
         );
 
+      let answerString;
+
       switch (answer.type) {
         case ComponentType.TextInput:
+          answerString = answer.value && answer.value.length > 0 ? answer.value : NO_RESPONSE;
+
           container.addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
-              answer.value && answer.value.length > 0 ? answer.value : NO_RESPONSE,
+              answerString
             ),
           );
           break;
 
         case ComponentType.StringSelect: {
           const options = question.stringSelectOptions as unknown as StringSelectOption[];
+          answerString = answer.values
+            .map((answer) => {
+              const option = options[Number(answer)];
+              roles.push(...option.roles);
+              return ` - ${option.label}`;
+            })
+            .join("\n");
+
           container.addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
-              answer.values
-                .map((answer) => {
-                  const option = options[Number(answer)];
-                  roles.push(...option.roles);
-                  return ` - ${option.label}`;
-                })
-                .join("\n"),
-            ),
-          );
+              answerString
+            ));
           break;
         }
 
@@ -103,6 +110,8 @@ export const run: ActionRun = async ({ params, record, api }) => {
               (snowflake) => data.resolved!.attachments![snowflake],
             );
 
+            answerString = attachments.map((attachment) => ` - ${attachment.url}`).join("\n");
+
             container.addMediaGalleryComponents(
               new MediaGalleryBuilder().addItems(
                 ...attachments.map((attachment) =>
@@ -111,36 +120,44 @@ export const run: ActionRun = async ({ params, record, api }) => {
               ),
             );
           } else {
-            container.addTextDisplayComponents(new TextDisplayBuilder().setContent(NO_RESPONSE));
+            answerString = NO_RESPONSE;
+            container.addTextDisplayComponents(new TextDisplayBuilder().setContent(answerString));
           }
           break;
 
         case ComponentType.UserSelect:
+          answerString = answer.values.length > 0
+            ? (
+              await Promise.all(
+                answer.values.map(async (id) => {
+                  if (id === record.ownerId) return "Nice try, but you cannot refer yourself";
+
+                  const pointRecord = await api.internal.point.upsert({
+                    userId: id,
+                    _atomics: {
+                      referralCount: { increment: 1 },
+                    },
+                    on: ["userId"],
+                  });
+                  api.point.computePoints(pointRecord.id);
+                  return `<@${id}>`;
+                }),
+              )
+            ).join(", ")
+            : NO_RESPONSE;
+
           container.addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
-              answer.values.length > 0
-                ? (
-                    await Promise.all(
-                      answer.values.map(async (id) => {
-                        if (id === record.ownerId) return "Nice try, but you cannot refer yourself";
-
-                        const pointRecord = await api.internal.point.upsert({
-                          userId: id,
-                          _atomics: {
-                            referralCount: { increment: 1 },
-                          },
-                          on: ["userId"],
-                        });
-                        api.point.computePoints(pointRecord.id);
-                        return `<@${id}>`;
-                      }),
-                    )
-                  ).join(", ")
-                : NO_RESPONSE,
+              answerString,
             ),
           );
+          break;
+
+        default:
+          answerString = NO_RESPONSE;
       }
 
+      answersString += `${escapeCsvField(`${questionTitle}: ${escapeCsvField(answerString)}`)}, `;
       return container.toJSON();
     }),
   );
@@ -199,6 +216,9 @@ export const run: ActionRun = async ({ params, record, api }) => {
       ],
     });
   }
+
+  logger.debug({ answers, answersString }, "Submitted application answers");
+  record.answers = answersString;
 
   record.status = "open";
   record.roles = roles;
