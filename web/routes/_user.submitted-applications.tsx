@@ -20,6 +20,7 @@ import { APIGuildMember } from "discord.js";
 import { useState } from "react";
 
 const COLUMN_ROW = [
+  "createdAt",
   "application",
   "ownerId",
   "ownerName",
@@ -48,6 +49,7 @@ export default function () {
     let records = await api.submittedApplications.findMany({
       first: 250,
       select: {
+        createdAt: true,
         ownerId: true,
         ownerName: true,
         threadId: true,
@@ -142,6 +144,7 @@ export default function () {
             selectable={false}
             pageSize={10}
             columns={[
+              "createdAt",
               "application.title",
               { header: "User", render: UserColumn },
               { header: "Thread", render: ThreadColumn },
