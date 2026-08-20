@@ -106,7 +106,7 @@ export default function () {
             name={user?.username ?? ownerName ?? undefined}
           />
         }
-        onClick={() => { }}
+        onClick={() => {}}
       >
         <BlockStack>
           <Text variant="bodyMd" fontWeight="bold" as="h3">
