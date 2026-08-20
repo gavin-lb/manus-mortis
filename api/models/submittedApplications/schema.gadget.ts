@@ -7,6 +7,7 @@ export const schema: GadgetModel = {
   type: "gadget/model-schema/v2",
   storageKey: "ColVNubc6pHu",
   fields: {
+    answers: { type: "string", storageKey: "f5gD6SvGv3P-" },
     application: {
       type: "belongsTo",
       validations: { required: true },
