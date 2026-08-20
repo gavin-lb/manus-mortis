@@ -151,6 +151,7 @@ export default function () {
               "status",
               "answers",
             ]}
+            initialSort={{ createdAt: "Descending" }}
           ></AutoTable>
           <InlineStack align="end">
             <Button icon={FolderDownIcon} onClick={handleExport} loading={exporting}>
