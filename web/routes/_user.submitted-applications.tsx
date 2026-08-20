@@ -1,9 +1,22 @@
 import { api } from "@/api";
+import { SubmittedApplicationsRecord } from "@gadget-client/manus-mortis";
 import { AutoTable } from "@gadgetinc/react/auto/polaris";
 import { LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { BlockStack, Button, Card, InlineStack, Page } from "@shopify/polaris";
+import {
+  Avatar,
+  BlockStack,
+  Button,
+  Card,
+  InlineStack,
+  Link,
+  Page,
+  ResourceItem,
+  Tag,
+  Text,
+} from "@shopify/polaris";
 import { FolderDownIcon } from "@shopify/polaris-icons";
+import { APIGuildMember } from "discord.js";
 import { useState } from "react";
 
 const COLUMN_ROW = [
@@ -16,15 +29,19 @@ const COLUMN_ROW = [
 ] as const;
 
 export const loader = (async ({ context }) => {
+  const [members]: [APIGuildMember[]] = await Promise.all([context.api.getMembers()]);
+
   return {
     serverId: process.env.SERVER_ID!,
+    members,
   };
 }) satisfies LoaderFunction;
 
 export default function () {
-  const { serverId } = useLoaderData<typeof loader>();
-
+  const { members, serverId } = useLoaderData<typeof loader>();
   const [exporting, setExporting] = useState(false);
+
+  const memberMap = Object.fromEntries(members.map((member) => [member.user.id, member]));
 
   const handleExport = async () => {
     setExporting(true);
@@ -64,6 +81,49 @@ export default function () {
     setExporting(false);
   };
 
+  const UserColumn = ({
+    record: { ownerId, threadId },
+  }: {
+    record: SubmittedApplicationsRecord;
+  }) => {
+    const user = memberMap[ownerId].user;
+
+    return (
+      <ResourceItem
+        id={user.id}
+        media={
+          <Avatar
+            source={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`}
+            size="lg"
+            name={user.username ?? undefined}
+          />
+        }
+        url={`https://discord.com/channels/${serverId}/${threadId}`}
+      >
+        <BlockStack>
+          <Text variant="bodyMd" fontWeight="bold" as="h3">
+            {user.global_name ?? user.username}
+          </Text>
+          <div>{user.global_name && `(${user.username})`}</div>
+        </BlockStack>
+      </ResourceItem>
+    );
+  };
+
+  const ThreadColumn = ({ record: { threadId } }: { record: SubmittedApplicationsRecord }) => {
+    return (
+      <Tag>
+        <Link
+          url={`https://discord.com/channels/${serverId}/${threadId}`}
+          target="_blank"
+          monochrome
+        >
+          View Thread
+        </Link>
+      </Tag>
+    );
+  };
+
   return (
     <Page
       title="Submitted Applications"
@@ -76,7 +136,14 @@ export default function () {
             live
             model={api.submittedApplications}
             selectable={false}
-            columns={["application.title", "ownerId", "ownerName", "threadId", "status", "answers"]}
+            pageSize={20}
+            columns={[
+              "application.title",
+              { header: "User", render: UserColumn },
+              { header: "Thread", render: ThreadColumn },
+              "status",
+              "answers",
+            ]}
           ></AutoTable>
           <InlineStack align="end">
             <Button icon={FolderDownIcon} onClick={handleExport} loading={exporting}>
