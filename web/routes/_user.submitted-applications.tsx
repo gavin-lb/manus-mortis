@@ -1,11 +1,12 @@
 import { api } from "@/api";
-import { SubmittedApplicationsRecord } from "@gadget-client/manus-mortis";
+import { ApplicationRecord, SubmittedApplicationsRecord } from "@gadget-client/manus-mortis";
 import { AutoTable } from "@gadgetinc/react/auto/polaris";
 import { LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import {
   Avatar,
   BlockStack,
+  Box,
   Button,
   Card,
   InlineStack,
@@ -31,18 +32,31 @@ const COLUMN_ROW = [
 ] as const;
 
 export const loader = (async ({ context }) => {
-  const [members]: [APIGuildMember[]] = await Promise.all([context.api.getMembers()]);
+  const [members, applications]: [APIGuildMember[], ApplicationRecord[]] = await Promise.all([
+    context.api.getMembers(),
+    api.application.findMany(),
+  ]);
 
   return {
     serverId: process.env.SERVER_ID!,
     members,
+    applications,
   };
 }) satisfies LoaderFunction;
 
 export default function () {
-  const { members, serverId } = useLoaderData<typeof loader>();
+  const { members, serverId, applications } = useLoaderData<typeof loader>();
   const [exporting, setExporting] = useState(false);
   const [pageSize, setPageSize] = useState<number>(10);
+  const [applicationType, setApplicationType] = useState("");
+
+  const applicationOptions = [
+    { label: "All", value: "" },
+    ...applications.map((application) => ({
+      label: application.title ?? "Untitled",
+      value: application.id,
+    })),
+  ];
 
   const memberMap = Object.fromEntries(members.map((member) => [member.user.id, member]));
 
@@ -59,6 +73,11 @@ export default function () {
         answers: true,
         application: { title: true },
       },
+      filter: applicationType
+        ? {
+            applicationId: { equals: applicationType },
+          }
+        : undefined,
     });
 
     const allRecords = [...records];
@@ -80,7 +99,12 @@ export default function () {
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = `submitted-applications-${new Date().toISOString()}.csv`;
+    link.download = `${
+      applicationOptions
+        .find((o) => o.value === applicationType)
+        ?.label.toLowerCase()
+        .replace(" ", "-") || "all"
+    }-submitted-applications-${new Date().toISOString()}.csv`;
     link.click();
     setExporting(false);
   };
@@ -140,6 +164,26 @@ export default function () {
     >
       <Card>
         <BlockStack gap="200">
+          <InlineStack gap="400" align="start" blockAlign="end" wrap={false}>
+            <Box width="50%">
+              <Select
+                label="Application type"
+                options={applicationOptions}
+                value={applicationType}
+                onChange={setApplicationType}
+              />
+            </Box>
+
+            <Box width="50%">
+              <Select
+                label="Page size"
+                value={String(pageSize)}
+                onChange={(size) => setPageSize(Number(size))}
+                options={["10", "15", "20", "25", "50", "100"]}
+              />
+            </Box>
+          </InlineStack>
+
           <AutoTable
             live
             model={api.submittedApplications}
@@ -154,14 +198,14 @@ export default function () {
               "answers",
             ]}
             initialSort={{ createdAt: "Descending" }}
+            filter={
+              applicationType
+                ? {
+                    applicationId: { equals: applicationType },
+                  }
+                : undefined
+            }
           ></AutoTable>
-          <Select
-            label="Page size"
-            labelInline
-            value={String(pageSize)}
-            onChange={(size) => setPageSize(Number(size))}
-            options={["10", "15", "20", "25", "50", "100"]}
-          />
           <InlineStack align="end">
             <Button icon={FolderDownIcon} onClick={handleExport} loading={exporting}>
               Export
