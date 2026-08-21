@@ -165,7 +165,7 @@ export default function () {
       <Card>
         <BlockStack gap="200">
           <InlineStack gap="400" align="start" blockAlign="end" wrap={false}>
-            <Box width="50%">
+            <Box width="45%">
               <Select
                 label="Application type"
                 options={applicationOptions}
@@ -174,13 +174,19 @@ export default function () {
               />
             </Box>
 
-            <Box width="50%">
+            <Box width="45%">
               <Select
                 label="Page size"
                 value={String(pageSize)}
                 onChange={(size) => setPageSize(Number(size))}
                 options={["10", "15", "20", "25", "50", "100"]}
               />
+            </Box>
+
+            <Box width="10%">
+              <Button icon={FolderDownIcon} onClick={handleExport} loading={exporting}>
+                Export
+              </Button>
             </Box>
           </InlineStack>
 
@@ -206,11 +212,6 @@ export default function () {
                 : undefined
             }
           ></AutoTable>
-          <InlineStack align="end">
-            <Button icon={FolderDownIcon} onClick={handleExport} loading={exporting}>
-              Export
-            </Button>
-          </InlineStack>
         </BlockStack>
       </Card>
     </Page>
